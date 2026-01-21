@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import wbassLogo from "@/assets/wbass-logo.png";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,27 +14,32 @@ export function Footer() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="text-2xl font-display text-foreground tracking-[0.1em]"
+            className="flex items-center"
           >
-            LUXE
+            <img src={wbassLogo} alt="Wbass Cabinets" className="h-10 w-auto" />
           </motion.a>
 
           {/* Navigation */}
           <nav className="flex items-center gap-8">
-            {["Início", "Sobre", "Coleção", "Contato"].map((item) => (
+            {[
+              { label: "Início", href: "#hero" },
+              { label: "Sobre", href: "#about" },
+              { label: "Produtos", href: "#products" },
+              { label: "Contato", href: "#contact" },
+            ].map((item) => (
               <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors duration-300"
+                key={item.label}
+                href={item.href}
+                className="text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors duration-300 font-medium"
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </nav>
 
           {/* Copyright */}
           <p className="text-xs text-muted-foreground tracking-wider">
-            © {currentYear} LUXE. Todos os direitos reservados.
+            © {currentYear} Wbass Cabinets. Todos os direitos reservados.
           </p>
         </div>
       </div>

@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import wbassLogo from "@/assets/wbass-logo.png";
 
 const navLinks = [
   { label: "Início", href: "#hero" },
   { label: "Sobre", href: "#about" },
-  { label: "Coleção", href: "#products" },
+  { label: "Produtos", href: "#products" },
   { label: "Contato", href: "#contact" },
 ];
 
@@ -36,8 +37,8 @@ export function Header() {
       <div className="container mx-auto px-6 lg:px-12">
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#hero" className="text-2xl font-display text-foreground tracking-[0.1em]">
-            LUXE
+          <a href="#hero" className="flex items-center">
+            <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 w-auto" />
           </a>
 
           {/* Desktop Navigation */}
@@ -46,7 +47,7 @@ export function Header() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors duration-300 link-underline"
+                  className="text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors duration-300 link-underline font-medium"
                 >
                   {link.label}
                 </a>
@@ -56,8 +57,8 @@ export function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Button variant="luxury" size="default">
-              Explorar
+            <Button variant="wbass" size="default">
+              Orçamento
             </Button>
           </div>
 
@@ -88,15 +89,15 @@ export function Header() {
                   <a
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors py-2"
+                    className="block text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors py-2 font-medium"
                   >
                     {link.label}
                   </a>
                 </li>
               ))}
               <li className="pt-4">
-                <Button variant="luxury" size="lg" className="w-full">
-                  Explorar
+                <Button variant="wbass" size="lg" className="w-full">
+                  Orçamento
                 </Button>
               </li>
             </ul>
