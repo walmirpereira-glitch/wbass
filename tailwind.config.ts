@@ -47,12 +47,15 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
+        wbass: {
+          green: "hsl(var(--wbass-green))",
+          "green-light": "hsl(var(--wbass-green-light))",
+          "green-dark": "hsl(var(--wbass-green-dark))",
         },
-        cream: "hsl(var(--cream))",
+        silver: {
+          DEFAULT: "hsl(var(--silver))",
+          dark: "hsl(var(--silver-dark))",
+        },
         charcoal: "hsl(var(--charcoal))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -66,7 +69,7 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Playfair Display', 'Georgia', 'serif'],
+        display: ['Bebas Neue', 'Impact', 'sans-serif'],
         body: ['Inter', '-apple-system', 'sans-serif'],
       },
       borderRadius: {
@@ -95,6 +98,10 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        pulse: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -102,6 +109,7 @@ export default {
         "fade-up": "fade-up 0.8s ease-out forwards",
         "fade-in": "fade-in 0.6s ease-out forwards",
         shimmer: "shimmer 2s linear infinite",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
