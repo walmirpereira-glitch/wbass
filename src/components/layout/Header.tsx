@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import wbassLogo from "@/assets/wbass-logo.png";
 
 const navLinks = [
@@ -57,9 +58,11 @@ export function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Button variant="wbass" size="default">
-              Orçamento
-            </Button>
+            <Link to="/orcamento">
+              <Button variant="wbass" size="default">
+                Orçamento
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -96,9 +99,11 @@ export function Header() {
                 </li>
               ))}
               <li className="pt-4">
-                <Button variant="wbass" size="lg" className="w-full">
-                  Orçamento
-                </Button>
+                <Link to="/orcamento" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="wbass" size="lg" className="w-full">
+                    Orçamento
+                  </Button>
+                </Link>
               </li>
             </ul>
           </motion.div>
