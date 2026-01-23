@@ -6,81 +6,105 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   category: string;
   description: string;
   specs: string;
-  price: string;
+  price: number;
 }
 
 const premiumProducts: Product[] = [
   {
-    id: 1,
-    name: "WB 112 Premium",
-    category: "Compacto",
-    description: "1x12\" - Ideal para ensaios e pequenos palcos",
-    specs: "300W RMS | 8 ohms | 12kg",
-    price: "Consulte",
-  },
-  {
-    id: 2,
-    name: "WB 210 Premium",
+    id: "210d",
+    name: "Wbass 210D",
     category: "Versátil",
-    description: "2x10\" - Equilíbrio perfeito entre potência e portabilidade",
-    specs: "500W RMS | 4 ohms | 18kg",
-    price: "Consulte",
+    description: "2 falantes Italianos em neodímio de 10\" + driver com ajuste de volume 3 posições",
+    specs: "400W RMS | 8 ohms",
+    price: 5602.08,
   },
   {
-    id: 3,
-    name: "WB 410 Premium",
+    id: "210dp",
+    name: "Wbass 210DP",
+    category: "Versátil Pro",
+    description: "2 falantes Italianos em neodímio de 10\" + driver com ajuste de volume 3 posições",
+    specs: "500W RMS | 4 ohms",
+    price: 5781.60,
+  },
+  {
+    id: "410dp",
+    name: "Wbass 410DP",
     category: "Profissional",
-    description: "4x10\" - Para quem precisa de potência máxima",
-    specs: "800W RMS | 4 ohms | 28kg",
-    price: "Consulte",
+    description: "4 falantes Italianos em neodímio de 10\" + driver com ajuste de volume 3 posições",
+    specs: "800W RMS | 4 ohms",
+    price: 7102.22,
   },
   {
-    id: 4,
-    name: "WB 115 Premium",
+    id: "112d",
+    name: "Wbass 112D",
+    category: "Compacto",
+    description: "1 falante Italiano em neodímio de 12\" + driver com ajuste de volume 3 posições",
+    specs: "350W RMS | 4 ou 8 ohms",
+    price: 5516.28,
+  },
+  {
+    id: "112nd",
+    name: "Wbass 112ND",
+    category: "Compacto",
+    description: "1 falante Italiano em neodímio de 12\", não possui driver",
+    specs: "350W RMS | 4 ou 8 ohms",
+    price: 4329.60,
+  },
+  {
+    id: "115d",
+    name: "Wbass 115D",
     category: "Graves Profundos",
-    description: "1x15\" - Graves que você sente no peito",
-    specs: "400W RMS | 8 ohms | 20kg",
-    price: "Consulte",
+    description: "1 falante Italiano em neodímio de 15\" + driver com ajuste de volume 3 posições",
+    specs: "400W RMS | 8 ohms",
+    price: 5760.48,
+  },
+  {
+    id: "115nd",
+    name: "Wbass 115ND",
+    category: "Graves Profundos",
+    description: "1 falante Italiano em neodímio de 15\", não possui driver",
+    specs: "400W RMS | 8 ohms",
+    price: 4590.96,
   },
 ];
 
 const easyProducts: Product[] = [
   {
-    id: 5,
-    name: "WB 112 Easy",
+    id: "easy-1x10d",
+    name: "Wbass Easy 1x10D",
     category: "Compacto",
-    description: "1x12\" - Ideal para ensaios e pequenos palcos",
-    specs: "300W RMS | 8 ohms | 18kg",
-    price: "Consulte",
+    description: "1 falante 10\" em ferrite nacional + driver com ajuste de volume 3 posições",
+    specs: "300W RMS | 4 ou 8 ohms",
+    price: 2599.00,
   },
   {
-    id: 6,
-    name: "WB 210 Easy",
+    id: "easy-2x10d",
+    name: "Wbass Easy 2x10D",
     category: "Versátil",
-    description: "2x10\" - Equilíbrio perfeito entre potência e portabilidade",
-    specs: "500W RMS | 4 ohms | 26kg",
-    price: "Consulte",
+    description: "2 falantes 10\" em ferrite nacional + driver com ajuste de volume 3 posições",
+    specs: "500W RMS | 4 ou 8 ohms",
+    price: 3499.96,
   },
   {
-    id: 7,
-    name: "WB 410 Easy",
-    category: "Profissional",
-    description: "4x10\" - Para quem precisa de potência máxima",
-    specs: "800W RMS | 4 ohms | 38kg",
-    price: "Consulte",
+    id: "easy-1x12d",
+    name: "Wbass Easy 1x12D",
+    category: "Compacto",
+    description: "1 falante 12\" em ferrite nacional + driver com ajuste de volume 3 posições",
+    specs: "400W RMS | 4 ou 8 ohms",
+    price: 2992.00,
   },
   {
-    id: 8,
-    name: "WB 115 Easy",
-    category: "Graves Profundos",
-    description: "1x15\" - Graves que você sente no peito",
-    specs: "400W RMS | 8 ohms | 28kg",
-    price: "Consulte",
+    id: "easy-1x12nd",
+    name: "Wbass Easy 1x12ND",
+    category: "Compacto",
+    description: "1 falante 12\" em ferrite nacional, não possui driver",
+    specs: "400W RMS | 4 ou 8 ohms",
+    price: 2502.08,
   },
 ];
 
@@ -114,18 +138,18 @@ function ProductCard({ product, index, isInView, delay, variant }: ProductCardPr
       }`}>
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <Speaker className={`w-16 h-16 transition-colors duration-300 mx-auto mb-2 ${
+          <div className="text-center px-4">
+            <Speaker className={`w-12 h-12 transition-colors duration-300 mx-auto mb-2 ${
               isPremium 
                 ? "text-primary/40 group-hover:text-primary" 
                 : "text-muted-foreground/30 group-hover:text-primary/60"
             }`} />
-            <span className={`font-display text-2xl transition-colors duration-300 ${
+            <span className={`font-display text-lg transition-colors duration-300 ${
               isPremium 
                 ? "text-primary/60 group-hover:text-primary" 
                 : "text-muted-foreground/50 group-hover:text-primary"
             }`}>
-              {product.name.split(" ").slice(0, 2).join(" ")}
+              {product.name}
             </span>
           </div>
         </div>
@@ -138,9 +162,11 @@ function ProductCard({ product, index, isInView, delay, variant }: ProductCardPr
         )}
         {/* Hover overlay */}
         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-          <Button variant="wbass" size="sm" className="w-full">
-            Ver Detalhes
-          </Button>
+          <Link to="/orcamento">
+            <Button variant="wbass" size="sm" className="w-full">
+              Solicitar Orçamento
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -151,16 +177,18 @@ function ProductCard({ product, index, isInView, delay, variant }: ProductCardPr
         }`}>
           {product.category}
         </span>
-        <h3 className="font-display text-xl text-foreground group-hover:text-primary transition-colors duration-300 mb-2 tracking-wide">
+        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-300 mb-2 tracking-wide">
           {product.name}
         </h3>
-        <p className="text-sm text-muted-foreground mb-2">
+        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
           {product.description}
         </p>
         <p className="text-xs text-muted-foreground/70 mb-3">
           {product.specs}
         </p>
-        <span className="text-primary font-semibold">{product.price}</span>
+        <span className="text-primary font-bold text-lg">
+          R$ {product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+        </span>
       </div>
     </motion.article>
   );
@@ -214,7 +242,7 @@ export function ProductsSection() {
           {/* Premium Features */}
           <div className="grid sm:grid-cols-3 gap-4 mb-8">
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-              <span className="text-primary font-semibold text-sm">✦ Falantes Europeus</span>
+              <span className="text-primary font-semibold text-sm">✦ Falantes Italianos</span>
               <p className="text-muted-foreground text-xs mt-1">Imã em neodímio de alta performance</p>
             </div>
             <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
@@ -227,7 +255,7 @@ export function ProductsSection() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {premiumProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
@@ -278,7 +306,7 @@ export function ProductsSection() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {easyProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
