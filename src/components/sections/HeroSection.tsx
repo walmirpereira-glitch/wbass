@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { ChevronDown, Volume2, Shield, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/cabinet-4x10.jpg";
 
 const features = [
   { icon: Volume2, label: "Ótimo Timbre" },
