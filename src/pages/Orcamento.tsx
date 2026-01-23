@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
-import { FileText, Download, Plus, Minus } from "lucide-react";
+import { FileText, Download, Plus, Minus, Crown, Zap } from "lucide-react";
 import jsPDF from "jspdf";
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,38 +14,104 @@ interface Product {
   description: string;
   price: number;
   specs: string;
+  line: "premium" | "easy";
 }
 
 const products: Product[] = [
+  // Linha Premium
   {
-    id: "wb112",
-    name: "WB 112",
-    description: "Cabinet Compacto",
-    price: 1890,
-    specs: "200W RMS | 1x12\" | 12kg",
+    id: "210d",
+    name: "Wbass 210D",
+    description: "2 falantes Italianos em neodímio de 10\" + driver",
+    price: 5602.08,
+    specs: "400W RMS | 8 ohms",
+    line: "premium",
   },
   {
-    id: "wb210",
-    name: "WB 210",
-    description: "Cabinet Versátil",
-    price: 2490,
-    specs: "400W RMS | 2x10\" | 18kg",
+    id: "210dp",
+    name: "Wbass 210DP",
+    description: "2 falantes Italianos em neodímio de 10\" + driver",
+    price: 5781.60,
+    specs: "500W RMS | 4 ohms",
+    line: "premium",
   },
   {
-    id: "wb410",
-    name: "WB 410",
-    description: "Cabinet Profissional",
-    price: 3290,
-    specs: "800W RMS | 4x10\" | 32kg",
+    id: "410dp",
+    name: "Wbass 410DP",
+    description: "4 falantes Italianos em neodímio de 10\" + driver",
+    price: 7102.22,
+    specs: "800W RMS | 4 ohms",
+    line: "premium",
   },
   {
-    id: "wb115",
-    name: "WB 115",
-    description: "Graves Profundos",
-    price: 2890,
-    specs: "500W RMS | 1x15\" | 25kg",
+    id: "112d",
+    name: "Wbass 112D",
+    description: "1 falante Italiano em neodímio de 12\" + driver",
+    price: 5516.28,
+    specs: "350W RMS | 4 ou 8 ohms",
+    line: "premium",
+  },
+  {
+    id: "112nd",
+    name: "Wbass 112ND",
+    description: "1 falante Italiano em neodímio de 12\", sem driver",
+    price: 4329.60,
+    specs: "350W RMS | 4 ou 8 ohms",
+    line: "premium",
+  },
+  {
+    id: "115d",
+    name: "Wbass 115D",
+    description: "1 falante Italiano em neodímio de 15\" + driver",
+    price: 5760.48,
+    specs: "400W RMS | 8 ohms",
+    line: "premium",
+  },
+  {
+    id: "115nd",
+    name: "Wbass 115ND",
+    description: "1 falante Italiano em neodímio de 15\", sem driver",
+    price: 4590.96,
+    specs: "400W RMS | 8 ohms",
+    line: "premium",
+  },
+  // Linha Easy
+  {
+    id: "easy-1x10d",
+    name: "Wbass Easy 1x10D",
+    description: "1 falante 10\" em ferrite nacional + driver",
+    price: 2599.00,
+    specs: "300W RMS | 4 ou 8 ohms",
+    line: "easy",
+  },
+  {
+    id: "easy-2x10d",
+    name: "Wbass Easy 2x10D",
+    description: "2 falantes 10\" em ferrite nacional + driver",
+    price: 3499.96,
+    specs: "500W RMS | 4 ou 8 ohms",
+    line: "easy",
+  },
+  {
+    id: "easy-1x12d",
+    name: "Wbass Easy 1x12D",
+    description: "1 falante 12\" em ferrite nacional + driver",
+    price: 2992.00,
+    specs: "400W RMS | 4 ou 8 ohms",
+    line: "easy",
+  },
+  {
+    id: "easy-1x12nd",
+    name: "Wbass Easy 1x12ND",
+    description: "1 falante 12\" em ferrite nacional, sem driver",
+    price: 2502.08,
+    specs: "400W RMS | 4 ou 8 ohms",
+    line: "easy",
   },
 ];
+
+const premiumProducts = products.filter((p) => p.line === "premium");
+const easyProducts = products.filter((p) => p.line === "easy");
 
 interface CartItem {
   product: Product;
@@ -186,9 +252,9 @@ const Orcamento = () => {
       doc.setFontSize(10);
       doc.setFont("helvetica", "bold");
       doc.text("PRODUTO", margin + 5, y + 3);
-      doc.text("ESPECIFICAÇÕES", margin + 60, y + 3);
+      doc.text("ESPECIFICAÇÕES", margin + 70, y + 3);
       doc.text("QTD", pageWidth - margin - 55, y + 3);
-      doc.text("VALOR", pageWidth - margin - 25, y + 3);
+      doc.text("VALOR", pageWidth - margin - 30, y + 3);
 
       y += 15;
 
@@ -199,40 +265,45 @@ const Orcamento = () => {
       cart.forEach((item, index) => {
         if (index % 2 === 0) {
           doc.setFillColor(250, 250, 250);
-          doc.rect(margin, y - 5, pageWidth - margin * 2, 12, "F");
+          doc.rect(margin, y - 5, pageWidth - margin * 2, 14, "F");
         }
 
+        const lineLabel = item.product.line === "premium" ? "[Premium]" : "[Easy]";
+        
         doc.setFont("helvetica", "bold");
-        doc.text(item.product.name, margin + 5, y + 2);
+        doc.setFontSize(9);
+        doc.text(`${item.product.name}`, margin + 5, y + 1);
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
-        doc.text(item.product.description, margin + 5, y + 7);
-        doc.setFontSize(10);
-        doc.text(item.product.specs, margin + 60, y + 2);
-        doc.text(item.quantity.toString(), pageWidth - margin - 50, y + 2);
+        doc.setFontSize(7);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`${lineLabel} ${item.product.description}`, margin + 5, y + 6);
+        doc.setTextColor(50, 50, 50);
+        doc.setFontSize(9);
+        doc.text(item.product.specs, margin + 70, y + 3);
+        doc.text(item.quantity.toString(), pageWidth - margin - 50, y + 3);
         doc.text(
-          `R$ ${(item.product.price * item.quantity).toLocaleString("pt-BR")}`,
-          pageWidth - margin - 25,
-          y + 2
+          `R$ ${(item.product.price * item.quantity).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
+          pageWidth - margin - 30,
+          y + 3
         );
 
-        y += 15;
+        y += 16;
       });
 
       y += 10;
 
       // Total
       doc.setFillColor(26, 26, 26);
-      doc.rect(pageWidth - margin - 80, y - 5, 80, 15, "F");
+      doc.rect(pageWidth - margin - 90, y - 5, 90, 15, "F");
 
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
-      doc.text("TOTAL:", pageWidth - margin - 75, y + 5);
+      doc.text("TOTAL:", pageWidth - margin - 85, y + 5);
       doc.setTextColor(80, 200, 120);
       doc.text(
-        `R$ ${total.toLocaleString("pt-BR")}`,
-        pageWidth - margin - 35,
+        `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
+        pageWidth - margin - 45,
         y + 5
       );
 
@@ -274,6 +345,78 @@ const Orcamento = () => {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const renderProductCard = (product: Product) => {
+    const isPremium = product.line === "premium";
+    
+    return (
+      <div
+        key={product.id}
+        className={`flex items-center gap-4 p-4 rounded-lg border transition-all duration-300 ${
+          isInCart(product.id)
+            ? isPremium
+              ? "border-primary bg-primary/10"
+              : "border-primary/70 bg-primary/5"
+            : isPremium
+              ? "border-primary/30 bg-background/50 hover:border-primary/60"
+              : "border-border bg-background/50 hover:border-primary/50"
+        }`}
+      >
+        <Checkbox
+          id={product.id}
+          checked={isInCart(product.id)}
+          onCheckedChange={(checked) =>
+            toggleProduct(product, checked as boolean)
+          }
+          className="border-primary data-[state=checked]:bg-primary"
+        />
+        <div className="flex-1 min-w-0">
+          <label
+            htmlFor={product.id}
+            className="font-semibold text-foreground cursor-pointer flex items-center gap-2 flex-wrap"
+          >
+            {product.name}
+            {isPremium && (
+              <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded flex items-center gap-1">
+                <Crown className="w-3 h-3" />
+                Premium
+              </span>
+            )}
+          </label>
+          <p className="text-sm text-muted-foreground truncate">
+            {product.description}
+          </p>
+          <p className="text-xs text-muted-foreground/70">
+            {product.specs}
+          </p>
+        </div>
+        <div className="text-right shrink-0">
+          <p className="text-primary font-bold">
+            R$ {product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          </p>
+        </div>
+        {isInCart(product.id) && (
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => updateQuantity(product.id, -1)}
+              className="w-8 h-8 rounded border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
+            >
+              <Minus className="w-4 h-4" />
+            </button>
+            <span className="w-8 text-center font-semibold">
+              {getQuantity(product.id)}
+            </span>
+            <button
+              onClick={() => updateQuantity(product.id, 1)}
+              className="w-8 h-8 rounded border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -364,69 +507,43 @@ const Orcamento = () => {
               </div>
             </div>
 
-            {/* Products Selection */}
+            {/* Products Selection - Premium */}
+            <div className="bg-secondary/30 p-8 rounded-lg border border-primary/30 mb-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Crown className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">
+                    Linha Premium
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Falantes Italianos em neodímio • Ultra leve • Som moderno
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {premiumProducts.map(renderProductCard)}
+              </div>
+            </div>
+
+            {/* Products Selection - Easy */}
             <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-6">
-                Selecione os Produtos
-              </h2>
-              <div className="space-y-4">
-                {products.map((product) => (
-                  <div
-                    key={product.id}
-                    className={`flex items-center gap-4 p-4 rounded-lg border transition-all duration-300 ${
-                      isInCart(product.id)
-                        ? "border-primary bg-primary/5"
-                        : "border-border bg-background/50 hover:border-primary/50"
-                    }`}
-                  >
-                    <Checkbox
-                      id={product.id}
-                      checked={isInCart(product.id)}
-                      onCheckedChange={(checked) =>
-                        toggleProduct(product, checked as boolean)
-                      }
-                      className="border-primary data-[state=checked]:bg-primary"
-                    />
-                    <div className="flex-1">
-                      <label
-                        htmlFor={product.id}
-                        className="font-semibold text-foreground cursor-pointer"
-                      >
-                        {product.name}
-                        <span className="text-muted-foreground font-normal ml-2">
-                          - {product.description}
-                        </span>
-                      </label>
-                      <p className="text-sm text-muted-foreground">
-                        {product.specs}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-primary font-bold">
-                        R$ {product.price.toLocaleString("pt-BR")}
-                      </p>
-                    </div>
-                    {isInCart(product.id) && (
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => updateQuantity(product.id, -1)}
-                          className="w-8 h-8 rounded border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                        <span className="w-8 text-center font-semibold">
-                          {getQuantity(product.id)}
-                        </span>
-                        <button
-                          onClick={() => updateQuantity(product.id, 1)}
-                          className="w-8 h-8 rounded border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-secondary rounded-lg">
+                  <Zap className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-foreground">
+                    Linha Easy
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Falantes nacionais em ferrite • Custo-benefício • Som vintage
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {easyProducts.map(renderProductCard)}
               </div>
             </div>
 
@@ -440,7 +557,7 @@ const Orcamento = () => {
                   <p className="text-2xl font-bold text-foreground">
                     Total:{" "}
                     <span className="text-primary">
-                      R$ {total.toLocaleString("pt-BR")}
+                      R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                     </span>
                   </p>
                 </div>
