@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import wbassLogo from "@/assets/wbass-logo.png";
+import wbassLogo from "@/assets/wbass-logo-new.jpg";
 
 const navLinks = [
   { label: "Início", href: "#hero" },

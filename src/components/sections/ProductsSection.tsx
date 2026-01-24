@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { ArrowRight, Speaker, Crown, Zap } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowRight, Speaker, Crown, Zap, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface Product {
   id: string;
@@ -13,10 +14,16 @@ interface Product {
   specs: string;
   price: number;
   image?: string;
+  gallery?: string[];
 }
 
 // Product images
 import img212dFrente from "@/assets/products/212d-frente.jpg";
+import img212dLateral1 from "@/assets/products/212d-lateral1.jpg";
+import img212dLateral2 from "@/assets/products/212d-lateral2.jpg";
+import img212dTraseira from "@/assets/products/212d-traseira.jpg";
+
+const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
 
 const premiumProducts: Product[] = [
   {
@@ -43,6 +50,7 @@ const premiumProducts: Product[] = [
     specs: "700W RMS | 4 ohms",
     price: 6429.72,
     image: img212dFrente,
+    gallery: product212dGallery,
   },
   {
     id: "410dp",
@@ -127,10 +135,17 @@ interface ProductCardProps {
   isInView: boolean;
   delay: number;
   variant: "premium" | "easy";
+  onOpenGallery?: (images: string[], productName: string) => void;
 }
 
-function ProductCard({ product, index, isInView, delay, variant }: ProductCardProps) {
+function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }: ProductCardProps) {
   const isPremium = variant === "premium";
+  
+  const handleImageClick = () => {
+    if (product.gallery && product.gallery.length > 0 && onOpenGallery) {
+      onOpenGallery(product.gallery, product.name);
+    }
+  };
   
   return (
     <motion.article
@@ -153,7 +168,8 @@ function ProductCard({ product, index, isInView, delay, variant }: ProductCardPr
           <img 
             src={product.image} 
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${product.gallery ? 'cursor-pointer' : ''}`}
+            onClick={handleImageClick}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -218,6 +234,25 @@ function ProductCard({ product, index, isInView, delay, variant }: ProductCardPr
 export function ProductsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
+  const [galleryProductName, setGalleryProductName] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleOpenGallery = (images: string[], productName: string) => {
+    setGalleryImages(images);
+    setGalleryProductName(productName);
+    setCurrentImageIndex(0);
+    setGalleryOpen(true);
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  };
 
   return (
     <section id="products" ref={ref} className="py-24 lg:py-32 bg-background">
@@ -285,6 +320,7 @@ export function ProductsSection() {
                 isInView={isInView}
                 delay={0.2}
                 variant="premium"
+                onOpenGallery={handleOpenGallery}
               />
             ))}
           </div>
@@ -336,6 +372,7 @@ export function ProductsSection() {
                 isInView={isInView}
                 delay={0.5}
                 variant="easy"
+                onOpenGallery={handleOpenGallery}
               />
             ))}
           </div>
@@ -358,6 +395,74 @@ export function ProductsSection() {
             </Button>
           </Link>
         </motion.div>
+
+        {/* Image Gallery Modal */}
+        <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
+          <DialogContent className="max-w-4xl bg-background/95 backdrop-blur-md border-primary/30 p-0">
+            <div className="relative">
+              {/* Close button */}
+              <button
+                onClick={() => setGalleryOpen(false)}
+                className="absolute top-4 right-4 z-10 p-2 bg-background/80 rounded-full hover:bg-background transition-colors"
+              >
+                <X className="w-5 h-5 text-foreground" />
+              </button>
+              
+              {/* Product name */}
+              <div className="absolute top-4 left-4 z-10">
+                <h3 className="font-display text-xl text-foreground bg-background/80 px-3 py-1 rounded">
+                  {galleryProductName}
+                </h3>
+              </div>
+
+              {/* Main image */}
+              <div className="aspect-square md:aspect-video">
+                {galleryImages.length > 0 && (
+                  <img
+                    src={galleryImages[currentImageIndex]}
+                    alt={`${galleryProductName} - Imagem ${currentImageIndex + 1}`}
+                    className="w-full h-full object-contain bg-secondary"
+                  />
+                )}
+              </div>
+
+              {/* Navigation arrows */}
+              {galleryImages.length > 1 && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+
+              {/* Thumbnails */}
+              {galleryImages.length > 1 && (
+                <div className="flex justify-center gap-2 p-4 bg-secondary/50">
+                  {galleryImages.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentImageIndex(idx)}
+                      className={`w-16 h-16 rounded overflow-hidden border-2 transition-colors ${
+                        idx === currentImageIndex ? 'border-primary' : 'border-transparent'
+                      }`}
+                    >
+                      <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
