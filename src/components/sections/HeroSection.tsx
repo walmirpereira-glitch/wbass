@@ -85,12 +85,16 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.9, ease: [0.4, 0, 0.2, 1] }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <Button variant="wbassFilled" size="xl">
-            Ver Produtos
-          </Button>
-          <Button variant="wbass" size="xl">
-            Saiba Mais
-          </Button>
+          <a href="#products">
+            <Button variant="wbassFilled" size="xl">
+              Ver Produtos
+            </Button>
+          </a>
+          <a href="#about">
+            <Button variant="wbass" size="xl">
+              Saiba Mais
+            </Button>
+          </a>
         </motion.div>
       </div>
 
