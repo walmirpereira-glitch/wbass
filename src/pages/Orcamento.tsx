@@ -36,6 +36,14 @@ const products: Product[] = [
     line: "premium",
   },
   {
+    id: "212d",
+    name: "Wbass 212D",
+    description: "2 falantes Italianos em neodímio de 12\" + driver",
+    price: 6429.72,
+    specs: "700W RMS | 4 ohms",
+    line: "premium",
+  },
+  {
     id: "410dp",
     name: "Wbass 410DP",
     description: "4 falantes Italianos em neodímio de 10\" + driver",

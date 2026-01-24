@@ -12,7 +12,11 @@ interface Product {
   description: string;
   specs: string;
   price: number;
+  image?: string;
 }
+
+// Product images
+import img212dFrente from "@/assets/products/212d-frente.jpg";
 
 const premiumProducts: Product[] = [
   {
@@ -30,6 +34,15 @@ const premiumProducts: Product[] = [
     description: "2 falantes Italianos em neodímio de 10\" + driver com ajuste de volume 3 posições",
     specs: "500W RMS | 4 ohms",
     price: 5781.60,
+  },
+  {
+    id: "212d",
+    name: "Wbass 212D",
+    category: "Versátil Potente",
+    description: "2 falantes Italianos em neodímio de 12\" + driver com ajuste de volume 3 posições",
+    specs: "700W RMS | 4 ohms",
+    price: 6429.72,
+    image: img212dFrente,
   },
   {
     id: "410dp",
@@ -136,23 +149,31 @@ function ProductCard({ product, index, isInView, delay, variant }: ProductCardPr
           ? "border-primary/30 group-hover:border-primary" 
           : "border-border group-hover:border-primary/50"
       }`}>
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center px-4">
-            <Speaker className={`w-12 h-12 transition-colors duration-300 mx-auto mb-2 ${
-              isPremium 
-                ? "text-primary/40 group-hover:text-primary" 
-                : "text-muted-foreground/30 group-hover:text-primary/60"
-            }`} />
-            <span className={`font-display text-lg transition-colors duration-300 ${
-              isPremium 
-                ? "text-primary/60 group-hover:text-primary" 
-                : "text-muted-foreground/50 group-hover:text-primary"
-            }`}>
-              {product.name}
-            </span>
+        {product.image ? (
+          <img 
+            src={product.image} 
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center px-4">
+              <Speaker className={`w-12 h-12 transition-colors duration-300 mx-auto mb-2 ${
+                isPremium 
+                  ? "text-primary/40 group-hover:text-primary" 
+                  : "text-muted-foreground/30 group-hover:text-primary/60"
+              }`} />
+              <span className={`font-display text-lg transition-colors duration-300 ${
+                isPremium 
+                  ? "text-primary/60 group-hover:text-primary" 
+                  : "text-muted-foreground/50 group-hover:text-primary"
+              }`}>
+                {product.name}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         {/* Badge */}
         {isPremium && (
           <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
