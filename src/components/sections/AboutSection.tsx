@@ -1,28 +1,28 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Volume2, Shield, Truck, Zap } from "lucide-react";
+import { Cpu, PenTool, Award, Globe } from "lucide-react";
 
 const differentials = [
   {
-    icon: Volume2,
-    title: "Ótimo Timbre",
-    description: "Resposta de frequência otimizada para contrabaixo, graves profundos e médios definidos.",
+    icon: Cpu,
+    title: "Tecnologia de Ponta",
+    description: "Falantes de Neodímio de alta performance: som encorpado e potente com peso drasticamente reduzido.",
   },
   {
-    icon: Truck,
-    title: "Portabilidade",
-    description: "Design compacto e leve, fácil de transportar para gigs e ensaios.",
+    icon: PenTool,
+    title: "Design Inteligente",
+    description: "Eficiência acústica que permite caixas compactas entregarem volumes impressionantes.",
   },
   {
-    icon: Shield,
-    title: "Robustez",
-    description: "Construção resistente com materiais de alta qualidade para suportar a vida na estrada.",
+    icon: Award,
+    title: "Acabamento Premium",
+    description: "Cada detalhe é pensado para durar na estrada e manter o visual profissional.",
   },
   {
-    icon: Zap,
-    title: "Potência",
-    description: "Alta eficiência sonora com capacidade de potência para qualquer palco.",
+    icon: Globe,
+    title: "Inovação Nacional",
+    description: "Padrão internacional com componentes de alta qualidade e desenvolvimento nacional.",
   },
 ];
 
@@ -40,7 +40,7 @@ export function AboutSection() {
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent" />
 
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -51,22 +51,44 @@ export function AboutSection() {
               Sobre a Wbass
             </span>
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-8 leading-tight tracking-wide">
-              FEITO POR BAIXISTAS
-              <span className="text-gradient-green block">PARA BAIXISTAS</span>
+              TECNOLOGIA DE BAIXISTA
+              <span className="text-gradient-green block">PARA BAIXISTA</span>
             </h2>
             <div className="divider-green mb-8" />
+            
             <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-              A Wbass Cabinets nasceu da paixão pelo contrabaixo e da busca pelo som perfeito. 
-              Desenvolvemos caixas acústicas que entendem as necessidades reais do baixista brasileiro, 
-              combinando tecnologia de ponta com acabamento artesanal.
-            </p>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              Cada cabinet é projetado para entregar graves potentes e definidos, médios presentes 
-              e uma clareza que corta qualquer mix. Tudo isso em um pacote compacto e resistente.
+              No mercado musical, existem equipamentos feitos por indústrias e equipamentos feitos por quem vive o palco. 
+              A Wbass nasceu desta segunda filosofia. Fundada por músicos apaixonados e especialistas em produtos, 
+              nossa missão é simples: <strong className="text-foreground">entregar a máxima definição sonora com a portabilidade que o baixista moderno exige.</strong>
             </p>
 
+            <h3 className="font-display text-2xl text-foreground mb-4 tracking-wide">
+              O Som que o Seu Talento Merece
+            </h3>
+            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+              Sabemos que o contrabaixo — seja ele elétrico ou acústico — exige uma resposta de frequência precisa. 
+              Por isso, as caixas Wbass são projetadas para traduzir cada nuance da sua execução.
+            </p>
+
+            <h3 className="font-display text-2xl text-foreground mb-4 tracking-wide">
+              Por que escolher Wbass?
+            </h3>
+            <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+              Músicos que buscam praticidade sem abrir mão do timbre encontram na Wbass o parceiro ideal. 
+              Chega de carregar equipamentos pesados e volumosos. Com a Wbass, você <em className="text-primary">"carrega menos e toca mais"</em>, 
+              mantendo a clareza e o punch que só uma marca especializada pode oferecer.
+            </p>
+
+            <div className="bg-primary/10 border border-primary/30 rounded-lg p-6 mt-8">
+              <p className="text-foreground text-xl font-display tracking-wide text-center">
+                Wbass Cabinets: <span className="text-primary">Potência, Definição e Portabilidade.</span>
+                <br />
+                <span className="text-muted-foreground text-base font-body">O próximo nível do seu som começa aqui.</span>
+              </p>
+            </div>
+
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-3 gap-8 mt-10">
               {[
                 { number: "10+", label: "Anos de Experiência" },
                 { number: "500+", label: "Cabinets Produzidos" },
@@ -95,7 +117,7 @@ export function AboutSection() {
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="grid grid-cols-2 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
           >
             {differentials.map((item, index) => (
               <motion.div
@@ -114,6 +136,24 @@ export function AboutSection() {
                 </p>
               </motion.div>
             ))}
+
+            {/* Innovation Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="sm:col-span-2 p-6 bg-gradient-to-br from-primary/20 to-primary/5 rounded-lg border border-primary/30"
+            >
+              <h3 className="font-display text-xl text-foreground mb-3 tracking-wide">
+                Inovação Nacional com Padrão Internacional
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                A Wbass se consolidou no mercado brasileiro como uma alternativa real às grandes marcas globais. 
+                Ao unir componentes de alta qualidade (como nas linhas que utilizam falantes importados) com o 
+                desenvolvimento nacional da linha Wbass Easy, democratizamos o acesso ao verdadeiro timbre para 
+                baixistas de todos os níveis.
+              </p>
+            </motion.div>
           </motion.div>
         </div>
       </div>
