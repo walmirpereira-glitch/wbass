@@ -2,19 +2,40 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import wbassLogo from "@/assets/wbass-logo-new.jpg";
 
 const navLinks = [
-  { label: "Início", href: "#hero" },
-  { label: "Sobre", href: "#about" },
-  { label: "Produtos", href: "#products" },
-  { label: "Contato", href: "#contact" },
+  { label: "Início", anchor: "#hero" },
+  { label: "Sobre", anchor: "#about" },
+  { label: "Produtos", anchor: "#products" },
+  { label: "Contato", anchor: "#contact" },
 ];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavClick = (anchor: string) => {
+    if (location.pathname !== "/") {
+      // Se não está na home, navega para home e depois scroll
+      navigate("/");
+      setTimeout(() => {
+        const element = document.querySelector(anchor);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      // Se já está na home, apenas scroll
+      const element = document.querySelector(anchor);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,20 +59,23 @@ export function Header() {
       <div className="container mx-auto px-6 lg:px-12">
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#hero" className="flex items-center">
+          <button 
+            onClick={() => handleNavClick("#hero")} 
+            className="flex items-center"
+          >
             <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 w-auto" />
-          </a>
+          </button>
 
           {/* Desktop Navigation */}
           <ul className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
+              <li key={link.anchor}>
+                <button
+                  onClick={() => handleNavClick(link.anchor)}
                   className="text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors duration-300 link-underline font-medium"
                 >
                   {link.label}
-                </a>
+                </button>
               </li>
             ))}
           </ul>
@@ -88,14 +112,16 @@ export function Header() {
           >
             <ul className="container mx-auto px-6 py-6 space-y-4">
               {navLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors py-2 font-medium"
+                <li key={link.anchor}>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleNavClick(link.anchor);
+                    }}
+                    className="block text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors py-2 font-medium w-full text-left"
                   >
                     {link.label}
-                  </a>
+                  </button>
                 </li>
               ))}
               <li className="pt-4">

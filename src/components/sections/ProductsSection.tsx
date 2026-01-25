@@ -17,13 +17,20 @@ interface Product {
   gallery?: string[];
 }
 
-// Product images
+// Product images - 212D
 import img212dFrente from "@/assets/products/212d-frente.jpg";
 import img212dLateral1 from "@/assets/products/212d-lateral1.jpg";
 import img212dLateral2 from "@/assets/products/212d-lateral2.jpg";
 import img212dTraseira from "@/assets/products/212d-traseira.jpg";
 
+// Product images - 210D
+import img210dFrente from "@/assets/products/210d-frente.jpg";
+import img210dLateral1 from "@/assets/products/210d-lateral1.jpg";
+import img210dLateral2 from "@/assets/products/210d-lateral2.jpg";
+import img210dTraseira from "@/assets/products/210d-traseira.jpg";
+
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
+const product210dGallery = [img210dFrente, img210dLateral1, img210dLateral2, img210dTraseira];
 
 const premiumProducts: Product[] = [
   {
@@ -33,6 +40,8 @@ const premiumProducts: Product[] = [
     description: "2 falantes Italianos em neodímio de 10\" + driver com ajuste de volume 3 posições",
     specs: "400W RMS | 8 ohms",
     price: 5602.08,
+    image: img210dFrente,
+    gallery: product210dGallery,
   },
   {
     id: "210dp",
