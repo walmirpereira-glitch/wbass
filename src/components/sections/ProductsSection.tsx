@@ -167,18 +167,20 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
       }}
       className="group"
     >
-      {/* Image Container */}
-      <div className={`aspect-square bg-secondary rounded-lg overflow-hidden relative mb-5 border transition-colors ${
-        isPremium 
-          ? "border-primary/30 group-hover:border-primary" 
-          : "border-border group-hover:border-primary/50"
-      }`}>
+        {/* Image Container */}
+      <div 
+        className={`aspect-square bg-secondary rounded-lg overflow-hidden relative mb-5 border transition-colors ${
+          isPremium 
+            ? "border-primary/30 group-hover:border-primary" 
+            : "border-border group-hover:border-primary/50"
+        } ${product.gallery && product.gallery.length > 0 ? 'cursor-pointer' : ''}`}
+        onClick={product.gallery && product.gallery.length > 0 ? handleImageClick : undefined}
+      >
         {product.image ? (
           <img 
             src={product.image} 
             alt={product.name}
-            className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${product.gallery ? 'cursor-pointer' : ''}`}
-            onClick={handleImageClick}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -407,12 +409,13 @@ export function ProductsSection() {
 
         {/* Image Gallery Modal */}
         <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-          <DialogContent className="max-w-4xl bg-background/95 backdrop-blur-md border-primary/30 p-0">
+          <DialogContent className="max-w-4xl bg-background/95 backdrop-blur-md border-primary/30 p-0 [&>button]:hidden">
             <div className="relative">
               {/* Close button */}
               <button
                 onClick={() => setGalleryOpen(false)}
-                className="absolute top-4 right-4 z-10 p-2 bg-background/80 rounded-full hover:bg-background transition-colors"
+                className="absolute top-4 right-4 z-20 p-2 bg-background/80 rounded-full hover:bg-background transition-colors"
+                type="button"
               >
                 <X className="w-5 h-5 text-foreground" />
               </button>
@@ -439,14 +442,16 @@ export function ProductsSection() {
               {galleryImages.length > 1 && (
                 <>
                   <button
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
+                    type="button"
                   >
                     <ChevronLeft className="w-6 h-6" />
                   </button>
                   <button
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
+                    type="button"
                   >
                     <ChevronRight className="w-6 h-6" />
                   </button>
@@ -463,6 +468,7 @@ export function ProductsSection() {
                       className={`w-16 h-16 rounded overflow-hidden border-2 transition-colors ${
                         idx === currentImageIndex ? 'border-primary' : 'border-transparent'
                       }`}
+                      type="button"
                     >
                       <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
                     </button>
