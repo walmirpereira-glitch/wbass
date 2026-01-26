@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import wbassLogo from "@/assets/wbass-logo-new.jpg";
 
@@ -20,7 +19,6 @@ export function Header() {
 
   const handleNavClick = (anchor: string) => {
     if (location.pathname !== "/") {
-      // Se não está na home, navega para home e depois scroll
       navigate("/");
       setTimeout(() => {
         const element = document.querySelector(anchor);
@@ -29,12 +27,12 @@ export function Header() {
         }
       }, 100);
     } else {
-      // Se já está na home, apenas scroll
       const element = document.querySelector(anchor);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
     }
+    setIsMobileMenuOpen(false);
   };
 
   useEffect(() => {
@@ -46,54 +44,47 @@ export function Header() {
   }, []);
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border"
-          : "bg-transparent"
+          ? "bg-white shadow-md py-2"
+          : "bg-white py-4"
       }`}
     >
       <div className="container mx-auto px-6 lg:px-12">
-        <nav className="flex items-center justify-between h-20">
+        <nav className="flex items-center justify-between">
           {/* Logo */}
           <button 
             onClick={() => handleNavClick("#hero")} 
             className="flex items-center"
           >
-            <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 w-auto" />
+            <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 md:h-14 w-auto" />
           </button>
 
           {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <li key={link.anchor}>
-                <button
-                  onClick={() => handleNavClick(link.anchor)}
-                  className="text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors duration-300 link-underline font-medium"
-                >
-                  {link.label}
-                </button>
-              </li>
+              <button
+                key={link.anchor}
+                onClick={() => handleNavClick(link.anchor)}
+                className="text-gray-700 hover:text-primary font-medium text-sm uppercase tracking-wider transition-colors"
+              >
+                {link.label}
+              </button>
             ))}
-          </ul>
-
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Link to="/orcamento">
-              <Button variant="wbass" size="default">
-                Orçamento
-              </Button>
+            <Link
+              to="/orcamento"
+              className="bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-2.5 rounded transition-colors"
+            >
+              Orçamento
             </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-foreground p-2"
-            aria-label="Toggle menu"
+            className="md:hidden p-2 text-gray-700 hover:text-primary transition-colors"
+            aria-label="Menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -107,34 +98,30 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            className="md:hidden bg-background border-t border-border"
+            transition={{ duration: 0.3 }}
+            className="md:hidden bg-white border-t border-gray-100 shadow-lg"
           >
-            <ul className="container mx-auto px-6 py-6 space-y-4">
+            <div className="flex flex-col py-4">
               {navLinks.map((link) => (
-                <li key={link.anchor}>
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      handleNavClick(link.anchor);
-                    }}
-                    className="block text-sm uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors py-2 font-medium w-full text-left"
-                  >
-                    {link.label}
-                  </button>
-                </li>
+                <button
+                  key={link.anchor}
+                  onClick={() => handleNavClick(link.anchor)}
+                  className="px-6 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 font-medium text-sm uppercase tracking-wider transition-colors text-left"
+                >
+                  {link.label}
+                </button>
               ))}
-              <li className="pt-4">
-                <Link to="/orcamento" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="wbass" size="lg" className="w-full">
-                    Orçamento
-                  </Button>
-                </Link>
-              </li>
-            </ul>
+              <Link
+                to="/orcamento"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="mx-6 mt-3 bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-3 rounded text-center transition-colors"
+              >
+                Orçamento
+              </Link>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }
