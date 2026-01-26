@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
-import wbassLogo from "@/assets/wbass-logo.png";
+import wbassLogo from "@/assets/wbass-logo-new.jpg";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-12 bg-background border-t border-border">
+    <footer className="py-12 bg-gray-900 border-t border-gray-800">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
@@ -30,7 +30,7 @@ export function Footer() {
               <a
                 key={item.label}
                 href={item.href}
-                className="text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors duration-300 font-medium"
+                className="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-primary transition-colors duration-300 font-medium"
               >
                 {item.label}
               </a>
@@ -38,7 +38,7 @@ export function Footer() {
           </nav>
 
           {/* Copyright */}
-          <p className="text-xs text-muted-foreground tracking-wider">
+          <p className="text-xs text-gray-500 tracking-wider">
             © {currentYear} Wbass Cabinets. Todos os direitos reservados.
           </p>
         </div>

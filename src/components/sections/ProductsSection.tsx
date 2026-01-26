@@ -167,12 +167,12 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
       }}
       className="group"
     >
-        {/* Image Container */}
+      {/* Image Container */}
       <div 
-        className={`aspect-square bg-secondary rounded-lg overflow-hidden relative mb-5 border transition-colors ${
+        className={`aspect-square bg-gray-100 rounded-lg overflow-hidden relative mb-5 border transition-colors ${
           isPremium 
-            ? "border-primary/30 group-hover:border-primary" 
-            : "border-border group-hover:border-primary/50"
+            ? "border-gray-200 group-hover:border-primary" 
+            : "border-gray-200 group-hover:border-gray-400"
         } ${product.gallery && product.gallery.length > 0 ? 'cursor-pointer' : ''}`}
         onClick={product.gallery && product.gallery.length > 0 ? handleImageClick : undefined}
       >
@@ -183,27 +183,26 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
             <div className="text-center px-4">
               <Speaker className={`w-12 h-12 transition-colors duration-300 mx-auto mb-2 ${
                 isPremium 
-                  ? "text-primary/40 group-hover:text-primary" 
-                  : "text-muted-foreground/30 group-hover:text-primary/60"
+                  ? "text-gray-400 group-hover:text-primary" 
+                  : "text-gray-300 group-hover:text-gray-500"
               }`} />
               <span className={`font-display text-lg transition-colors duration-300 ${
                 isPremium 
-                  ? "text-primary/60 group-hover:text-primary" 
-                  : "text-muted-foreground/50 group-hover:text-primary"
+                  ? "text-gray-500 group-hover:text-primary" 
+                  : "text-gray-400 group-hover:text-gray-600"
               }`}>
                 {product.name}
               </span>
             </div>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         {/* Badge */}
         {isPremium && (
-          <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+          <div className="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
             <Crown className="w-3 h-3" />
             Premium
           </div>
@@ -211,9 +210,9 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         {/* Hover overlay */}
         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
           <Link to="/orcamento">
-            <Button variant="wbass" size="sm" className="w-full">
+            <button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold text-sm py-2.5 rounded transition-colors">
               Solicitar Orçamento
-            </Button>
+            </button>
           </Link>
         </div>
       </div>
@@ -221,17 +220,17 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
       {/* Product Info */}
       <div>
         <span className={`text-xs uppercase tracking-[0.15em] block mb-1 font-semibold ${
-          isPremium ? "text-primary" : "text-muted-foreground"
+          isPremium ? "text-primary" : "text-gray-500"
         }`}>
           {product.category}
         </span>
-        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-300 mb-2 tracking-wide">
+        <h3 className="font-display text-lg text-gray-900 group-hover:text-primary transition-colors duration-300 mb-2 tracking-wide">
           {product.name}
         </h3>
-        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+        <p className="text-sm text-gray-600 mb-2 line-clamp-2">
           {product.description}
         </p>
-        <p className="text-xs text-muted-foreground/70 mb-3">
+        <p className="text-xs text-gray-400 mb-3">
           {product.specs}
         </p>
         <span className="text-primary font-bold text-lg">
@@ -266,7 +265,7 @@ export function ProductsSection() {
   };
 
   return (
-    <section id="products" ref={ref} className="py-24 lg:py-32 bg-background">
+    <section id="products" ref={ref} className="py-24 lg:py-32 bg-white">
       <div className="container mx-auto px-6 lg:px-12">
         {/* Header */}
         <motion.div
@@ -278,10 +277,10 @@ export function ProductsSection() {
           <span className="text-primary text-sm uppercase tracking-[0.3em] mb-4 block font-semibold">
             Nossa Linha
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 tracking-wide">
-            CABINETS <span className="text-gradient-green">WBASS</span>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-6 tracking-wide">
+            CABINETS <span className="text-primary">WBASS</span>
           </h2>
-          <div className="divider-green mx-auto" />
+          <div className="w-16 h-1 bg-primary mx-auto" />
         </motion.div>
 
         {/* Linha Premium */}
@@ -296,29 +295,29 @@ export function ProductsSection() {
               <Crown className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h3 className="font-display text-2xl md:text-3xl text-foreground tracking-wide">
+              <h3 className="font-display text-2xl md:text-3xl text-gray-900 tracking-wide">
                 LINHA <span className="text-primary">PREMIUM</span>
               </h3>
             </div>
           </div>
-          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed">
+          <p className="text-gray-600 max-w-2xl mb-8 leading-relaxed">
             Usamos falantes europeus com imã em neodímio que propiciam maior leveza. 
             Som mais moderno, ideal para quem busca o melhor em tecnologia e portabilidade.
           </p>
           
           {/* Premium Features */}
           <div className="grid sm:grid-cols-3 gap-4 mb-8">
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <span className="text-primary font-semibold text-sm">✦ Falantes Italianos</span>
-              <p className="text-muted-foreground text-xs mt-1">Imã em neodímio de alta performance</p>
+              <p className="text-gray-500 text-xs mt-1">Imã em neodímio de alta performance</p>
             </div>
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <span className="text-primary font-semibold text-sm">✦ Ultra Leve</span>
-              <p className="text-muted-foreground text-xs mt-1">Campo magnético forte, imã compacto</p>
+              <p className="text-gray-500 text-xs mt-1">Campo magnético forte, imã compacto</p>
             </div>
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <span className="text-primary font-semibold text-sm">✦ Som Moderno</span>
-              <p className="text-muted-foreground text-xs mt-1">Timbre contemporâneo e definido</p>
+              <p className="text-gray-500 text-xs mt-1">Timbre contemporâneo e definido</p>
             </div>
           </div>
 
@@ -344,33 +343,33 @@ export function ProductsSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-secondary rounded-lg border border-border">
-              <Zap className="w-6 h-6 text-muted-foreground" />
+            <div className="p-3 bg-gray-100 rounded-lg border border-gray-200">
+              <Zap className="w-6 h-6 text-gray-600" />
             </div>
             <div>
-              <h3 className="font-display text-2xl md:text-3xl text-foreground tracking-wide">
-                LINHA <span className="text-muted-foreground">EASY</span>
+              <h3 className="font-display text-2xl md:text-3xl text-gray-900 tracking-wide">
+                LINHA <span className="text-gray-500">EASY</span>
               </h3>
             </div>
           </div>
-          <p className="text-muted-foreground max-w-2xl mb-8 leading-relaxed">
+          <p className="text-gray-600 max-w-2xl mb-8 leading-relaxed">
             São falantes nacionais com imãs em ferrite, um pouco mais pesados mas com excelente rendimento. 
             Som vintage, ideal para quem busca o melhor custo-benefício fabricado no Brasil.
           </p>
 
           {/* Easy Features */}
           <div className="grid sm:grid-cols-3 gap-4 mb-8">
-            <div className="bg-secondary/50 border border-border rounded-lg p-4">
-              <span className="text-foreground font-semibold text-sm">● Falantes Nacionais</span>
-              <p className="text-muted-foreground text-xs mt-1">Imã em ferrite de alta qualidade</p>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <span className="text-gray-800 font-semibold text-sm">● Falantes Nacionais</span>
+              <p className="text-gray-500 text-xs mt-1">Imã em ferrite de alta qualidade</p>
             </div>
-            <div className="bg-secondary/50 border border-border rounded-lg p-4">
-              <span className="text-foreground font-semibold text-sm">● Custo-Benefício</span>
-              <p className="text-muted-foreground text-xs mt-1">Fabricado no Brasil, preço acessível</p>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <span className="text-gray-800 font-semibold text-sm">● Custo-Benefício</span>
+              <p className="text-gray-500 text-xs mt-1">Fabricado no Brasil, preço acessível</p>
             </div>
-            <div className="bg-secondary/50 border border-border rounded-lg p-4">
-              <span className="text-foreground font-semibold text-sm">● Som Vintage</span>
-              <p className="text-muted-foreground text-xs mt-1">Timbre clássico e encorpado</p>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <span className="text-gray-800 font-semibold text-sm">● Som Vintage</span>
+              <p className="text-gray-500 text-xs mt-1">Timbre clássico e encorpado</p>
             </div>
           </div>
 
@@ -397,13 +396,13 @@ export function ProductsSection() {
           className="text-center mt-16"
         >
           <Link to="/orcamento">
-            <Button variant="wbass" size="xl" className="group">
+            <button className="bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded transition-colors inline-flex items-center gap-2 group">
               Solicitar Orçamento
               <ArrowRight
                 size={18}
-                className="ml-2 group-hover:translate-x-1 transition-transform duration-300"
+                className="group-hover:translate-x-1 transition-transform duration-300"
               />
-            </Button>
+            </button>
           </Link>
         </motion.div>
 
