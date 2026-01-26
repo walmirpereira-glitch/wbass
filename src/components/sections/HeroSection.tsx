@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { ChevronDown, Volume2, Shield, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroBg from "@/assets/cabinet-4x10.jpg";
+import { useState, useEffect } from "react";
+import heroInicio1 from "@/assets/hero-inicio1.jpg";
+import heroInicio2 from "@/assets/hero-inicio2.jpg";
+
+const heroImages = [heroInicio1, heroInicio2];
 
 const features = [
   { icon: Volume2, label: "Ótimo Timbre" },
@@ -10,17 +14,33 @@ const features = [
 ];
 
 export function HeroSection() {
+  const [currentImage, setCurrentImage] = useState(() => 
+    heroImages[Math.floor(Math.random() * heroImages.length)]
+  );
+
+  useEffect(() => {
+    // Change image randomly every 8 seconds
+    const interval = setInterval(() => {
+      setCurrentImage(heroImages[Math.floor(Math.random() * heroImages.length)]);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background Image */}
+      {/* Background Image with fade transition */}
       <div className="absolute inset-0">
-        <img
-          src={heroBg}
-          alt="Caixa de som para contrabaixo Wbass"
+        <motion.img
+          key={currentImage}
+          src={currentImage}
+          alt="Wbass Cabinets - Melhor performance para os graves"
           className="w-full h-full object-cover"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5 }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
       </div>

@@ -407,9 +407,9 @@ export function ProductsSection() {
           </Link>
         </motion.div>
 
-        {/* Image Gallery Modal */}
+        {/* Image Gallery Modal - Quilter Labs Style */}
         <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-          <DialogContent className="max-w-4xl bg-background/95 backdrop-blur-md border-primary/30 p-0 [&>button]:hidden">
+          <DialogContent className="max-w-5xl bg-background border-primary/30 p-0 [&>button]:hidden">
             <div className="relative">
               {/* Close button */}
               <button
@@ -421,60 +421,76 @@ export function ProductsSection() {
               </button>
               
               {/* Product name */}
-              <div className="absolute top-4 left-4 z-10">
-                <h3 className="font-display text-xl text-foreground bg-background/80 px-3 py-1 rounded">
+              <div className="p-4 border-b border-border">
+                <h3 className="font-display text-xl text-foreground">
                   {galleryProductName}
                 </h3>
               </div>
 
-              {/* Main image */}
-              <div className="aspect-square md:aspect-video">
-                {galleryImages.length > 0 && (
-                  <img
-                    src={galleryImages[currentImageIndex]}
-                    alt={`${galleryProductName} - Imagem ${currentImageIndex + 1}`}
-                    className="w-full h-full object-contain bg-secondary"
-                  />
+              {/* Gallery Layout: Thumbnails left, Main image right */}
+              <div className="flex flex-col md:flex-row">
+                {/* Thumbnails - Left side on desktop, bottom on mobile */}
+                {galleryImages.length > 1 && (
+                  <div className="order-2 md:order-1 flex md:flex-col gap-2 p-3 md:p-4 bg-secondary/30 md:w-24 overflow-x-auto md:overflow-y-auto md:max-h-[500px]">
+                    {galleryImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentImageIndex(idx)}
+                        className={`flex-shrink-0 w-16 h-16 md:w-full md:h-auto md:aspect-square rounded overflow-hidden border-2 transition-all ${
+                          idx === currentImageIndex 
+                            ? 'border-primary ring-2 ring-primary/30' 
+                            : 'border-transparent hover:border-primary/50'
+                        }`}
+                        type="button"
+                      >
+                        <img 
+                          src={img} 
+                          alt={`${galleryProductName} - Miniatura ${idx + 1}`} 
+                          className="w-full h-full object-cover" 
+                        />
+                      </button>
+                    ))}
+                  </div>
                 )}
-              </div>
 
-              {/* Navigation arrows */}
-              {galleryImages.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
-                    type="button"
-                  >
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
-                    type="button"
-                  >
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
-                </>
-              )}
+                {/* Main image - Right side */}
+                <div className="order-1 md:order-2 flex-1 relative bg-secondary/20">
+                  <div className="aspect-square md:aspect-auto md:h-[500px] flex items-center justify-center p-4">
+                    {galleryImages.length > 0 && (
+                      <img
+                        src={galleryImages[currentImageIndex]}
+                        alt={`${galleryProductName} - Imagem ${currentImageIndex + 1}`}
+                        className="max-w-full max-h-full object-contain rounded-lg"
+                      />
+                    )}
+                  </div>
 
-              {/* Thumbnails */}
-              {galleryImages.length > 1 && (
-                <div className="flex justify-center gap-2 p-4 bg-secondary/50">
-                  {galleryImages.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentImageIndex(idx)}
-                      className={`w-16 h-16 rounded overflow-hidden border-2 transition-colors ${
-                        idx === currentImageIndex ? 'border-primary' : 'border-transparent'
-                      }`}
-                      type="button"
-                    >
-                      <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
-                    </button>
-                  ))}
+                  {/* Navigation arrows over main image */}
+                  {galleryImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
+                        type="button"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
+                        type="button"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </>
+                  )}
+
+                  {/* Image counter */}
+                  <div className="absolute bottom-4 right-4 bg-background/80 px-3 py-1 rounded-full text-sm text-muted-foreground">
+                    {currentImageIndex + 1} / {galleryImages.length}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           </DialogContent>
         </Dialog>
