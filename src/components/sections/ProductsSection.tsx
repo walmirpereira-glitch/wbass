@@ -409,37 +409,30 @@ export function ProductsSection() {
 
         {/* Image Gallery Modal - Quilter Labs Style */}
         <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-          <DialogContent className="max-w-5xl bg-background border-primary/30 p-0 [&>button]:hidden">
-            <div className="relative">
+          <DialogContent className="max-w-5xl bg-white border-0 p-0 [&>button]:hidden rounded-lg overflow-hidden">
+            <div className="relative bg-white">
               {/* Close button */}
               <button
                 onClick={() => setGalleryOpen(false)}
-                className="absolute top-4 right-4 z-20 p-2 bg-background/80 rounded-full hover:bg-background transition-colors"
+                className="absolute top-4 right-4 z-20 p-2 bg-white/90 rounded-full hover:bg-gray-100 transition-colors shadow-md"
                 type="button"
               >
-                <X className="w-5 h-5 text-foreground" />
+                <X className="w-5 h-5 text-gray-700" />
               </button>
-              
-              {/* Product name */}
-              <div className="p-4 border-b border-border">
-                <h3 className="font-display text-xl text-foreground">
-                  {galleryProductName}
-                </h3>
-              </div>
 
               {/* Gallery Layout: Thumbnails left, Main image right */}
-              <div className="flex flex-col md:flex-row">
+              <div className="flex flex-col md:flex-row min-h-[400px] md:min-h-[550px]">
                 {/* Thumbnails - Left side on desktop, bottom on mobile */}
                 {galleryImages.length > 1 && (
-                  <div className="order-2 md:order-1 flex md:flex-col gap-2 p-3 md:p-4 bg-secondary/30 md:w-24 overflow-x-auto md:overflow-y-auto md:max-h-[500px]">
+                  <div className="order-2 md:order-1 flex md:flex-col gap-3 p-4 bg-gray-50 md:w-28 overflow-x-auto md:overflow-y-auto border-t md:border-t-0 md:border-r border-gray-200">
                     {galleryImages.map((img, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentImageIndex(idx)}
-                        className={`flex-shrink-0 w-16 h-16 md:w-full md:h-auto md:aspect-square rounded overflow-hidden border-2 transition-all ${
+                        className={`flex-shrink-0 w-20 h-20 md:w-full md:h-auto md:aspect-square rounded-md overflow-hidden border-2 transition-all bg-white ${
                           idx === currentImageIndex 
-                            ? 'border-primary ring-2 ring-primary/30' 
-                            : 'border-transparent hover:border-primary/50'
+                            ? 'border-primary shadow-md' 
+                            : 'border-gray-200 hover:border-primary/50'
                         }`}
                         type="button"
                       >
@@ -454,13 +447,20 @@ export function ProductsSection() {
                 )}
 
                 {/* Main image - Right side */}
-                <div className="order-1 md:order-2 flex-1 relative bg-secondary/20">
-                  <div className="aspect-square md:aspect-auto md:h-[500px] flex items-center justify-center p-4">
+                <div className="order-1 md:order-2 flex-1 relative bg-white">
+                  {/* Product name header */}
+                  <div className="p-4 border-b border-gray-100">
+                    <h3 className="font-display text-xl text-gray-900">
+                      {galleryProductName}
+                    </h3>
+                  </div>
+                  
+                  <div className="aspect-square md:aspect-auto md:h-[450px] flex items-center justify-center p-6 bg-white">
                     {galleryImages.length > 0 && (
                       <img
                         src={galleryImages[currentImageIndex]}
                         alt={`${galleryProductName} - Imagem ${currentImageIndex + 1}`}
-                        className="max-w-full max-h-full object-contain rounded-lg"
+                        className="max-w-full max-h-full object-contain"
                       />
                     )}
                   </div>
@@ -470,14 +470,14 @@ export function ProductsSection() {
                     <>
                       <button
                         onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-white transition-colors z-10 shadow-md"
                         type="button"
                       >
                         <ChevronLeft className="w-5 h-5" />
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-background/80 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-white transition-colors z-10 shadow-md"
                         type="button"
                       >
                         <ChevronRight className="w-5 h-5" />
@@ -486,7 +486,7 @@ export function ProductsSection() {
                   )}
 
                   {/* Image counter */}
-                  <div className="absolute bottom-4 right-4 bg-background/80 px-3 py-1 rounded-full text-sm text-muted-foreground">
+                  <div className="absolute bottom-4 right-4 bg-white/90 px-3 py-1 rounded-full text-sm text-gray-600 shadow-sm">
                     {currentImageIndex + 1} / {galleryImages.length}
                   </div>
                 </div>
