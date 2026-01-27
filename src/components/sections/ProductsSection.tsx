@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { ArrowRight, Speaker, Crown, Zap, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 interface Product {
   id: string;
@@ -145,23 +145,14 @@ interface ProductCardProps {
   delay: number;
   variant: "premium" | "easy";
   onOpenGallery?: (product: Product) => void;
-  onRevealPrice?: (productId: string) => void;
-  isPriceRevealed?: boolean;
 }
 
-function ProductCard({ product, index, isInView, delay, variant, onOpenGallery, onRevealPrice, isPriceRevealed }: ProductCardProps) {
+function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }: ProductCardProps) {
   const isPremium = variant === "premium";
   
   const handleImageClick = () => {
     if (product.gallery && product.gallery.length > 0 && onOpenGallery) {
       onOpenGallery(product);
-    }
-  };
-
-  const handleRevealPrice = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onRevealPrice) {
-      onRevealPrice(product.id);
     }
   };
   
@@ -243,18 +234,14 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery, 
           {product.specs}
         </p>
         
-        {/* Price or Check Price Button */}
-        {isPriceRevealed ? (
-          <span className="text-primary font-bold text-lg">
-            R$ {product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-          </span>
-        ) : (
+        {/* CTA to view gallery */}
+        {product.gallery && product.gallery.length > 0 && (
           <button 
-            onClick={handleRevealPrice}
+            onClick={handleImageClick}
             className="text-sm text-primary font-semibold hover:text-primary/80 transition-colors flex items-center gap-1"
           >
             <Eye className="w-4 h-4" />
-            Checar Preço
+            Ver Detalhes e Preço
           </button>
         )}
       </div>
@@ -269,7 +256,6 @@ export function ProductsSection() {
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [galleryProduct, setGalleryProduct] = useState<Product | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [revealedPrices, setRevealedPrices] = useState<Set<string>>(new Set());
 
   const handleOpenGallery = (product: Product) => {
     if (product.gallery && product.gallery.length > 0) {
@@ -278,10 +264,6 @@ export function ProductsSection() {
       setCurrentImageIndex(0);
       setGalleryOpen(true);
     }
-  };
-
-  const handleRevealPrice = (productId: string) => {
-    setRevealedPrices(prev => new Set([...prev, productId]));
   };
 
   const nextImage = () => {
@@ -359,8 +341,6 @@ export function ProductsSection() {
                 delay={0.2}
                 variant="premium"
                 onOpenGallery={handleOpenGallery}
-                onRevealPrice={handleRevealPrice}
-                isPriceRevealed={revealedPrices.has(product.id)}
               />
             ))}
           </div>
@@ -413,8 +393,6 @@ export function ProductsSection() {
                 delay={0.5}
                 variant="easy"
                 onOpenGallery={handleOpenGallery}
-                onRevealPrice={handleRevealPrice}
-                isPriceRevealed={revealedPrices.has(product.id)}
               />
             ))}
           </div>
@@ -440,7 +418,8 @@ export function ProductsSection() {
 
         {/* Image Gallery Modal - Quilter Labs Style with Product Info */}
         <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-          <DialogContent className="max-w-6xl bg-white border-0 p-0 [&>button]:hidden rounded-lg overflow-hidden">
+          <DialogContent className="max-w-6xl bg-white border-0 p-0 [&>button]:hidden rounded-lg overflow-hidden" aria-describedby={undefined}>
+            <DialogTitle className="sr-only">{galleryProduct?.name || 'Galeria de Produto'}</DialogTitle>
             <div className="relative bg-white">
               {/* Close button */}
               <button
