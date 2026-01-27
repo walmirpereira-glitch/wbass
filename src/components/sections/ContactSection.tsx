@@ -7,12 +7,14 @@ const contactInfo = [
   {
     icon: Phone,
     label: "WhatsApp",
-    value: "+55 (00) 99999-9999",
+    value: "(12) 97408-1582",
+    href: "https://wa.me/5512974081582",
   },
   {
     icon: Mail,
     label: "Email",
-    value: "contato@wbasscabinets.com.br",
+    value: "contato@wbasscabinets.com",
+    href: "mailto:contato@wbasscabinets.com",
   },
   {
     icon: MapPin,
@@ -22,9 +24,8 @@ const contactInfo = [
 ];
 
 const socialLinks = [
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Youtube, href: "#", label: "YouTube" },
+  { icon: Instagram, href: "https://www.instagram.com/wbass_cabinets/", label: "Instagram" },
+  { icon: Facebook, href: "https://www.facebook.com/wbass.cabinets.2025", label: "Facebook" },
 ];
 
 export function ContactSection() {
