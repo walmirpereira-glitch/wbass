@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Início", anchor: "#hero" },
   { label: "Sobre", anchor: "#about" },
   { label: "Produtos", anchor: "#products" },
+  { label: "Garantia", anchor: "/garantia", isRoute: true },
   { label: "Contato", anchor: "#contact" },
 ];
 
@@ -17,17 +18,23 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleNavClick = (anchor: string) => {
+  const handleNavClick = (link: typeof navLinks[0]) => {
+    if (link.isRoute) {
+      navigate(link.anchor);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+    
     if (location.pathname !== "/") {
       navigate("/");
       setTimeout(() => {
-        const element = document.querySelector(anchor);
+        const element = document.querySelector(link.anchor);
         if (element) {
           element.scrollIntoView({ behavior: "smooth" });
         }
       }, 100);
     } else {
-      const element = document.querySelector(anchor);
+      const element = document.querySelector(link.anchor);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
@@ -55,7 +62,7 @@ export function Header() {
         <nav className="flex items-center justify-between">
           {/* Logo */}
           <button 
-            onClick={() => handleNavClick("#hero")} 
+            onClick={() => handleNavClick(navLinks[0])} 
             className="flex items-center"
           >
             <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 md:h-14 w-auto" />
@@ -66,7 +73,7 @@ export function Header() {
             {navLinks.map((link) => (
               <button
                 key={link.anchor}
-                onClick={() => handleNavClick(link.anchor)}
+                onClick={() => handleNavClick(link)}
                 className="text-gray-700 hover:text-primary font-medium text-sm uppercase tracking-wider transition-colors"
               >
                 {link.label}
@@ -105,7 +112,7 @@ export function Header() {
               {navLinks.map((link) => (
                 <button
                   key={link.anchor}
-                  onClick={() => handleNavClick(link.anchor)}
+                  onClick={() => handleNavClick(link)}
                   className="px-6 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 font-medium text-sm uppercase tracking-wider transition-colors text-left"
                 >
                   {link.label}
