@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { ArrowRight, Speaker, Crown, Zap, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Speaker, Crown, Zap, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -144,15 +144,24 @@ interface ProductCardProps {
   isInView: boolean;
   delay: number;
   variant: "premium" | "easy";
-  onOpenGallery?: (images: string[], productName: string) => void;
+  onOpenGallery?: (product: Product) => void;
+  onRevealPrice?: (productId: string) => void;
+  isPriceRevealed?: boolean;
 }
 
-function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }: ProductCardProps) {
+function ProductCard({ product, index, isInView, delay, variant, onOpenGallery, onRevealPrice, isPriceRevealed }: ProductCardProps) {
   const isPremium = variant === "premium";
   
   const handleImageClick = () => {
     if (product.gallery && product.gallery.length > 0 && onOpenGallery) {
-      onOpenGallery(product.gallery, product.name);
+      onOpenGallery(product);
+    }
+  };
+
+  const handleRevealPrice = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRevealPrice) {
+      onRevealPrice(product.id);
     }
   };
   
@@ -202,7 +211,7 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         )}
         {/* Badge */}
         {isPremium && (
-          <div className="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
+          <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded flex items-center gap-1">
             <Crown className="w-3 h-3" />
             Premium
           </div>
@@ -210,7 +219,7 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         {/* Hover overlay */}
         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
           <Link to="/orcamento">
-            <button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold text-sm py-2.5 rounded transition-colors">
+            <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm py-2.5 rounded transition-colors">
               Solicitar Orçamento
             </button>
           </Link>
@@ -220,22 +229,34 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
       {/* Product Info */}
       <div>
         <span className={`text-xs uppercase tracking-[0.15em] block mb-1 font-semibold ${
-          isPremium ? "text-primary" : "text-gray-500"
+          isPremium ? "text-primary" : "text-muted-foreground"
         }`}>
           {product.category}
         </span>
-        <h3 className="font-display text-lg text-gray-900 group-hover:text-primary transition-colors duration-300 mb-2 tracking-wide">
+        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-300 mb-2 tracking-wide">
           {product.name}
         </h3>
-        <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+        <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
           {product.description}
         </p>
-        <p className="text-xs text-gray-400 mb-3">
+        <p className="text-xs text-muted-foreground/70 mb-3">
           {product.specs}
         </p>
-        <span className="text-primary font-bold text-lg">
-          R$ {product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-        </span>
+        
+        {/* Price or Check Price Button */}
+        {isPriceRevealed ? (
+          <span className="text-primary font-bold text-lg">
+            R$ {product.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          </span>
+        ) : (
+          <button 
+            onClick={handleRevealPrice}
+            className="text-sm text-primary font-semibold hover:text-primary/80 transition-colors flex items-center gap-1"
+          >
+            <Eye className="w-4 h-4" />
+            Checar Preço
+          </button>
+        )}
       </div>
     </motion.article>
   );
@@ -246,14 +267,21 @@ export function ProductsSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
-  const [galleryProductName, setGalleryProductName] = useState("");
+  const [galleryProduct, setGalleryProduct] = useState<Product | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [revealedPrices, setRevealedPrices] = useState<Set<string>>(new Set());
 
-  const handleOpenGallery = (images: string[], productName: string) => {
-    setGalleryImages(images);
-    setGalleryProductName(productName);
-    setCurrentImageIndex(0);
-    setGalleryOpen(true);
+  const handleOpenGallery = (product: Product) => {
+    if (product.gallery && product.gallery.length > 0) {
+      setGalleryImages(product.gallery);
+      setGalleryProduct(product);
+      setCurrentImageIndex(0);
+      setGalleryOpen(true);
+    }
+  };
+
+  const handleRevealPrice = (productId: string) => {
+    setRevealedPrices(prev => new Set([...prev, productId]));
   };
 
   const nextImage = () => {
@@ -331,6 +359,8 @@ export function ProductsSection() {
                 delay={0.2}
                 variant="premium"
                 onOpenGallery={handleOpenGallery}
+                onRevealPrice={handleRevealPrice}
+                isPriceRevealed={revealedPrices.has(product.id)}
               />
             ))}
           </div>
@@ -383,6 +413,8 @@ export function ProductsSection() {
                 delay={0.5}
                 variant="easy"
                 onOpenGallery={handleOpenGallery}
+                onRevealPrice={handleRevealPrice}
+                isPriceRevealed={revealedPrices.has(product.id)}
               />
             ))}
           </div>
@@ -406,38 +438,38 @@ export function ProductsSection() {
           </Link>
         </motion.div>
 
-        {/* Image Gallery Modal - Quilter Labs Style */}
+        {/* Image Gallery Modal - Quilter Labs Style with Product Info */}
         <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-          <DialogContent className="max-w-5xl bg-white border-0 p-0 [&>button]:hidden rounded-lg overflow-hidden">
+          <DialogContent className="max-w-6xl bg-white border-0 p-0 [&>button]:hidden rounded-lg overflow-hidden">
             <div className="relative bg-white">
               {/* Close button */}
               <button
                 onClick={() => setGalleryOpen(false)}
-                className="absolute top-4 right-4 z-20 p-2 bg-white/90 rounded-full hover:bg-gray-100 transition-colors shadow-md"
+                className="absolute top-4 right-4 z-20 p-2 bg-white/90 rounded-full hover:bg-muted transition-colors shadow-md"
                 type="button"
               >
-                <X className="w-5 h-5 text-gray-700" />
+                <X className="w-5 h-5 text-foreground" />
               </button>
 
-              {/* Gallery Layout: Thumbnails left, Main image right */}
-              <div className="flex flex-col md:flex-row min-h-[400px] md:min-h-[550px]">
-                {/* Thumbnails - Left side on desktop, bottom on mobile */}
+              {/* Gallery Layout: Thumbnails left, Main image center, Info right */}
+              <div className="flex flex-col lg:flex-row min-h-[400px] lg:min-h-[550px]">
+                {/* Thumbnails - Left side on desktop */}
                 {galleryImages.length > 1 && (
-                  <div className="order-2 md:order-1 flex md:flex-col gap-3 p-4 bg-gray-50 md:w-28 overflow-x-auto md:overflow-y-auto border-t md:border-t-0 md:border-r border-gray-200">
+                  <div className="order-3 lg:order-1 flex lg:flex-col gap-3 p-4 bg-muted/50 lg:w-24 overflow-x-auto lg:overflow-y-auto border-t lg:border-t-0 lg:border-r border-border">
                     {galleryImages.map((img, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentImageIndex(idx)}
-                        className={`flex-shrink-0 w-20 h-20 md:w-full md:h-auto md:aspect-square rounded-md overflow-hidden border-2 transition-all bg-white ${
+                        className={`flex-shrink-0 w-16 h-16 lg:w-full lg:h-auto lg:aspect-square rounded-md overflow-hidden border-2 transition-all bg-white ${
                           idx === currentImageIndex 
                             ? 'border-primary shadow-md' 
-                            : 'border-gray-200 hover:border-primary/50'
+                            : 'border-border hover:border-primary/50'
                         }`}
                         type="button"
                       >
                         <img 
                           src={img} 
-                          alt={`${galleryProductName} - Miniatura ${idx + 1}`} 
+                          alt={`${galleryProduct?.name || ''} - Miniatura ${idx + 1}`} 
                           className="w-full h-full object-cover" 
                         />
                       </button>
@@ -445,21 +477,14 @@ export function ProductsSection() {
                   </div>
                 )}
 
-                {/* Main image - Right side */}
-                <div className="order-1 md:order-2 flex-1 relative bg-white">
-                  {/* Product name header */}
-                  <div className="p-4 border-b border-gray-100">
-                    <h3 className="font-display text-xl text-gray-900">
-                      {galleryProductName}
-                    </h3>
-                  </div>
-                  
-                  <div className="aspect-square md:aspect-auto md:h-[450px] flex items-center justify-center p-6 bg-white">
+                {/* Main image - Center */}
+                <div className="order-1 lg:order-2 flex-1 relative bg-white">
+                  <div className="aspect-square lg:aspect-auto lg:h-full flex items-center justify-center p-6 bg-white">
                     {galleryImages.length > 0 && (
                       <img
                         src={galleryImages[currentImageIndex]}
-                        alt={`${galleryProductName} - Imagem ${currentImageIndex + 1}`}
-                        className="max-w-full max-h-full object-contain"
+                        alt={`${galleryProduct?.name || ''} - Imagem ${currentImageIndex + 1}`}
+                        className="max-w-full max-h-[400px] lg:max-h-[500px] object-contain"
                       />
                     )}
                   </div>
@@ -469,14 +494,14 @@ export function ProductsSection() {
                     <>
                       <button
                         onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-white transition-colors z-10 shadow-md"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10 shadow-md"
                         type="button"
                       >
                         <ChevronLeft className="w-5 h-5" />
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-white transition-colors z-10 shadow-md"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10 shadow-md"
                         type="button"
                       >
                         <ChevronRight className="w-5 h-5" />
@@ -485,10 +510,60 @@ export function ProductsSection() {
                   )}
 
                   {/* Image counter */}
-                  <div className="absolute bottom-4 right-4 bg-white/90 px-3 py-1 rounded-full text-sm text-gray-600 shadow-sm">
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 px-3 py-1 rounded-full text-sm text-muted-foreground shadow-sm">
                     {currentImageIndex + 1} / {galleryImages.length}
                   </div>
                 </div>
+
+                {/* Product Info Panel - Right side */}
+                {galleryProduct && (
+                  <div className="order-2 lg:order-3 lg:w-80 p-6 border-t lg:border-t-0 lg:border-l border-border bg-muted/30">
+                    <div className="space-y-4">
+                      {/* Category Badge */}
+                      <span className="inline-block text-xs uppercase tracking-[0.15em] text-primary font-semibold bg-primary/10 px-2 py-1 rounded">
+                        {galleryProduct.category}
+                      </span>
+                      
+                      {/* Product Name */}
+                      <h3 className="font-display text-2xl text-foreground tracking-wide">
+                        {galleryProduct.name}
+                      </h3>
+                      
+                      {/* Description */}
+                      <p className="text-muted-foreground leading-relaxed">
+                        {galleryProduct.description}
+                      </p>
+                      
+                      {/* Specs */}
+                      <div className="bg-white rounded-lg p-4 border border-border">
+                        <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-2">
+                          Especificações
+                        </span>
+                        <p className="text-foreground font-medium">
+                          {galleryProduct.specs}
+                        </p>
+                      </div>
+                      
+                      {/* Price */}
+                      <div className="pt-4 border-t border-border">
+                        <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-2">
+                          Preço
+                        </span>
+                        <span className="text-primary font-bold text-2xl">
+                          R$ {galleryProduct.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      
+                      {/* CTA Button */}
+                      <Link to="/orcamento" className="block">
+                        <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded transition-colors flex items-center justify-center gap-2">
+                          Solicitar Orçamento
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </DialogContent>
