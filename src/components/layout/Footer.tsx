@@ -25,15 +25,26 @@ export function Footer() {
               { label: "Início", href: "#hero" },
               { label: "Sobre", href: "#about" },
               { label: "Produtos", href: "#products" },
+              { label: "Garantia", href: "/garantia", isRoute: true },
               { label: "Contato", href: "#contact" },
             ].map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-primary transition-colors duration-300 font-medium"
-              >
-                {item.label}
-              </a>
+              item.isRoute ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-primary transition-colors duration-300 font-medium"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-primary transition-colors duration-300 font-medium"
+                >
+                  {item.label}
+                </a>
+              )
             ))}
           </nav>
 
