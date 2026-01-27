@@ -2,7 +2,7 @@ import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import wbassLogo from "@/assets/wbass-logo-new.jpg";
+import wbassLogo from "@/assets/wbass-logo-new.png";
 
 const navLinks = [
   { label: "Início", anchor: "#hero" },
