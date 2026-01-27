@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import wbassLogo from "@/assets/wbass-logo-new.jpg";
 
-export function Footer() {
+export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-12 bg-gray-900 border-t border-gray-800">
+    <footer ref={ref} className="py-12 bg-gray-900 border-t border-gray-800">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
@@ -56,4 +57,4 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+});
