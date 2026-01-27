@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { forwardRef } from "react";
-import wbassLogo from "@/assets/wbass-logo-new.png";
+import wbassLogo from "@/assets/wbass-logo-new.jpg";
 
 export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
   const currentYear = new Date().getFullYear();
