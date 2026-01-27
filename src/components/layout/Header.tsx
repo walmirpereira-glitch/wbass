@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ const navLinks = [
   { label: "Contato", anchor: "#contact" },
 ];
 
-export function Header() {
+export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -21,6 +21,8 @@ export function Header() {
   const handleNavClick = (link: typeof navLinks[0]) => {
     if (link.isRoute) {
       navigate(link.anchor);
+      // Ensure route changes always start at the top
+      requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
       setIsMobileMenuOpen(false);
       return;
     }
@@ -52,6 +54,7 @@ export function Header() {
 
   return (
     <header
+      ref={ref}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-white shadow-md py-2"
@@ -131,4 +134,4 @@ export function Header() {
       </AnimatePresence>
     </header>
   );
-}
+});
