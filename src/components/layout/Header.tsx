@@ -85,7 +85,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
             >
               <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 md:h-14 w-auto" />
             </button>
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-gray-800 via-gray-700 to-primary/80 shadow-sm">
               {socialLinks.map((link) => (
                 <a
                   key={link.label}
@@ -93,7 +93,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={link.label}
-                  className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary transition-colors"
+                  className="w-8 h-8 flex items-center justify-center text-white/90 hover:text-white hover:scale-110 transition-all duration-200"
                 >
                   <link.Icon className="w-5 h-5" />
                 </a>
