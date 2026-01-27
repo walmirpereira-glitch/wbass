@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { ArrowRight, Speaker, Crown, Zap, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Speaker, Crown, Zap, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { ProductGalleryModal } from "./ProductGalleryModal";
 
 interface Product {
   id: string;
@@ -266,12 +265,12 @@ export function ProductsSection() {
     }
   };
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
+  const handleCloseGallery = () => {
+    setGalleryOpen(false);
   };
 
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+  const handleIndexChange = (index: number) => {
+    setCurrentImageIndex(index);
   };
 
   return (
@@ -416,137 +415,15 @@ export function ProductsSection() {
           </Link>
         </motion.div>
 
-        {/* Image Gallery Modal - Quilter Labs Style with Product Info */}
-        <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-          <DialogContent className="max-w-6xl bg-white border-0 p-0 [&>button]:hidden rounded-lg overflow-hidden" aria-describedby={undefined}>
-            <DialogTitle className="sr-only">{galleryProduct?.name || 'Galeria de Produto'}</DialogTitle>
-            <div className="relative bg-white">
-              {/* Close button */}
-              <button
-                onClick={() => setGalleryOpen(false)}
-                className="absolute top-4 right-4 z-20 p-2 bg-white/90 rounded-full hover:bg-muted transition-colors shadow-md"
-                type="button"
-              >
-                <X className="w-5 h-5 text-foreground" />
-              </button>
-
-              {/* Gallery Layout: Thumbnails left, Main image center, Info right */}
-              <div className="flex flex-col lg:flex-row min-h-[400px] lg:min-h-[550px]">
-                {/* Thumbnails - Left side on desktop */}
-                {galleryImages.length > 1 && (
-                  <div className="order-3 lg:order-1 flex lg:flex-col gap-3 p-4 bg-muted/50 lg:w-24 overflow-x-auto lg:overflow-y-auto border-t lg:border-t-0 lg:border-r border-border">
-                    {galleryImages.map((img, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setCurrentImageIndex(idx)}
-                        className={`flex-shrink-0 w-16 h-16 lg:w-full lg:h-auto lg:aspect-square rounded-md overflow-hidden border-2 transition-all bg-white ${
-                          idx === currentImageIndex 
-                            ? 'border-primary shadow-md' 
-                            : 'border-border hover:border-primary/50'
-                        }`}
-                        type="button"
-                      >
-                        <img 
-                          src={img} 
-                          alt={`${galleryProduct?.name || ''} - Miniatura ${idx + 1}`} 
-                          className="w-full h-full object-cover" 
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Main image - Center */}
-                <div className="order-1 lg:order-2 flex-1 relative bg-white">
-                  <div className="aspect-square lg:aspect-auto lg:h-full flex items-center justify-center p-6 bg-white">
-                    {galleryImages.length > 0 && (
-                      <img
-                        src={galleryImages[currentImageIndex]}
-                        alt={`${galleryProduct?.name || ''} - Imagem ${currentImageIndex + 1}`}
-                        className="max-w-full max-h-[400px] lg:max-h-[500px] object-contain"
-                      />
-                    )}
-                  </div>
-
-                  {/* Navigation arrows over main image */}
-                  {galleryImages.length > 1 && (
-                    <>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10 shadow-md"
-                        type="button"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors z-10 shadow-md"
-                        type="button"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    </>
-                  )}
-
-                  {/* Image counter */}
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 px-3 py-1 rounded-full text-sm text-muted-foreground shadow-sm">
-                    {currentImageIndex + 1} / {galleryImages.length}
-                  </div>
-                </div>
-
-                {/* Product Info Panel - Right side */}
-                {galleryProduct && (
-                  <div className="order-2 lg:order-3 lg:w-80 p-6 border-t lg:border-t-0 lg:border-l border-border bg-muted/30">
-                    <div className="space-y-4">
-                      {/* Category Badge */}
-                      <span className="inline-block text-xs uppercase tracking-[0.15em] text-primary font-semibold bg-primary/10 px-2 py-1 rounded">
-                        {galleryProduct.category}
-                      </span>
-                      
-                      {/* Product Name */}
-                      <h3 className="font-display text-2xl text-foreground tracking-wide">
-                        {galleryProduct.name}
-                      </h3>
-                      
-                      {/* Description */}
-                      <p className="text-muted-foreground leading-relaxed">
-                        {galleryProduct.description}
-                      </p>
-                      
-                      {/* Specs */}
-                      <div className="bg-white rounded-lg p-4 border border-border">
-                        <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-2">
-                          Especificações
-                        </span>
-                        <p className="text-foreground font-medium">
-                          {galleryProduct.specs}
-                        </p>
-                      </div>
-                      
-                      {/* Price */}
-                      <div className="pt-4 border-t border-border">
-                        <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold block mb-2">
-                          Preço
-                        </span>
-                        <span className="text-primary font-bold text-2xl">
-                          R$ {galleryProduct.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                        </span>
-                      </div>
-                      
-                      {/* CTA Button */}
-                      <Link to="/orcamento" className="block">
-                        <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded transition-colors flex items-center justify-center gap-2">
-                          Solicitar Orçamento
-                          <ArrowRight className="w-4 h-4" />
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        {/* Product Gallery Modal */}
+        <ProductGalleryModal
+          isOpen={galleryOpen}
+          onClose={handleCloseGallery}
+          product={galleryProduct}
+          images={galleryImages}
+          currentIndex={currentImageIndex}
+          onIndexChange={handleIndexChange}
+        />
       </div>
     </section>
   );
