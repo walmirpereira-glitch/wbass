@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Sobre", anchor: "#about" },
   { label: "Produtos", anchor: "#products" },
   { label: "Garantia", anchor: "/garantia", isRoute: true },
+  { label: "Dicas de Uso", anchor: "/dicas-de-uso", isRoute: true },
   { label: "Contato", anchor: "#contact" },
 ];
 
