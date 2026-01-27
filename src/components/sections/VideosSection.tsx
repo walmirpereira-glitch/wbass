@@ -8,7 +8,7 @@ const videos = [
 
 export const VideosSection = () => {
   return (
-    <section className="py-20 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
+    <section id="videos" className="py-20 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Radial gradient overlay with brand green */}
       <div 
         className="absolute inset-0 pointer-events-none"
