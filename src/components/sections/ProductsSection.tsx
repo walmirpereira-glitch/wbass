@@ -168,7 +168,7 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
     >
       {/* Image Container */}
       <div 
-        className={`aspect-square bg-gray-100 rounded-lg overflow-hidden relative mb-5 border transition-colors ${
+        className={`aspect-square bg-white rounded-lg overflow-hidden relative mb-5 border transition-colors ${
           isPremium 
             ? "border-gray-200 group-hover:border-primary" 
             : "border-gray-200 group-hover:border-gray-400"
@@ -176,11 +176,13 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         onClick={product.gallery && product.gallery.length > 0 ? handleImageClick : undefined}
       >
         {product.image ? (
-          <img 
-            src={product.image} 
-            alt={product.name}
-            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-          />
+          <div className="w-full h-full p-4 flex items-center justify-center bg-white">
+            <img 
+              src={product.image} 
+              alt={product.name}
+              className="max-w-full max-h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
             <div className="text-center px-4">
