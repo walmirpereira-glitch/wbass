@@ -103,7 +103,7 @@ export function ProductGalleryModal({
                   <img
                     src={img}
                     alt={`${product.name} - Miniatura ${idx + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-center"
                   />
                 </button>
               ))}
@@ -117,7 +117,7 @@ export function ProductGalleryModal({
                 <img
                   src={images[currentIndex]}
                   alt={`${product.name} - Imagem ${currentIndex + 1}`}
-                  className="max-w-full max-h-[400px] lg:max-h-[500px] object-contain"
+                  className="max-w-full max-h-[400px] lg:max-h-[500px] object-contain object-center"
                 />
               )}
             </div>
