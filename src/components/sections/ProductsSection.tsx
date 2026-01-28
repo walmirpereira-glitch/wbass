@@ -227,9 +227,7 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
 
       {/* Product Info */}
       <div>
-        <h3 className={`font-display text-lg transition-colors duration-300 mb-2 tracking-wide ${
-          isPremium ? "text-primary" : "text-foreground"
-        }`}>
+        <h3 className="font-display text-lg transition-colors duration-300 mb-2 tracking-wide text-primary">
           {product.name}
         </h3>
         <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
