@@ -208,22 +208,28 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         )}
         {/* Hover overlay */}
         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-          <Link to="/orcamento">
-            <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm py-2.5 rounded transition-colors">
-              Solicitar Orçamento
+          {product.gallery && product.gallery.length > 0 ? (
+            <button 
+              onClick={handleImageClick}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm py-2.5 rounded transition-colors"
+            >
+              Ver Detalhes
             </button>
-          </Link>
+          ) : (
+            <Link to="/orcamento">
+              <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm py-2.5 rounded transition-colors">
+                Solicitar Orçamento
+              </button>
+            </Link>
+          )}
         </div>
       </div>
 
       {/* Product Info */}
       <div>
-        <span className={`text-xs uppercase tracking-[0.15em] block mb-1 font-semibold ${
-          isPremium ? "text-primary" : "text-muted-foreground"
+        <h3 className={`font-display text-lg transition-colors duration-300 mb-2 tracking-wide ${
+          isPremium ? "text-primary" : "text-foreground"
         }`}>
-          {product.category}
-        </span>
-        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-300 mb-2 tracking-wide">
           {product.name}
         </h3>
         <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
