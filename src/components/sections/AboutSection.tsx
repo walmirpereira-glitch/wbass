@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Cpu, PenTool, Award, Globe } from "lucide-react";
+import aboutShowcaseImg from "@/assets/about-showcase.png";
 
 const differentials = [
   {
@@ -150,6 +151,20 @@ export function AboutSection() {
                 desenvolvimento nacional da linha Wbass Easy, democratizamos o acesso ao verdadeiro timbre para 
                 baixistas de todos os níveis.
               </p>
+            </motion.div>
+
+            {/* Showcase Image */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.9 }}
+              className="sm:col-span-2"
+            >
+              <img 
+                src={aboutShowcaseImg} 
+                alt="Baixo elétrico com cabinets Wbass Easy" 
+                className="w-full h-auto rounded-lg shadow-md"
+              />
             </motion.div>
           </motion.div>
         </div>
