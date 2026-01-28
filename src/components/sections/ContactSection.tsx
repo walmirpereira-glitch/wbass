@@ -11,7 +11,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
   {
@@ -84,30 +83,31 @@ export function ContactSection() {
           ? `Parcelado em ${data.numeroParcelas}x` 
           : "Não especificado";
 
-      const { error } = await supabase.functions.invoke("send-contact-email", {
-        body: {
-          nomeCompleto: data.nomeCompleto,
-          email: data.email,
-          telefone: data.telefone,
-          enderecoCompleto: data.enderecoCompleto,
-          cpf: data.cpf,
-          formaPagamento,
-          mensagem: data.mensagem || "",
-        },
-      });
+      // Build WhatsApp message
+      const message = `*Novo Contato - Wbass Cabinets*
 
-      if (error) throw error;
+*Nome:* ${data.nomeCompleto}
+*Email:* ${data.email}
+*Telefone:* ${data.telefone}
+*Endereço:* ${data.enderecoCompleto}
+*CPF:* ${data.cpf}
+*Pagamento:* ${formaPagamento}
+${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
+
+      // Open WhatsApp with the message
+      const whatsappUrl = `https://wa.me/5512974081582?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, "_blank");
 
       toast({
-        title: "Mensagem enviada!",
-        description: "Entraremos em contato em breve.",
+        title: "Redirecionando para WhatsApp",
+        description: "Complete o envio no WhatsApp.",
       });
       form.reset();
     } catch (error) {
-      console.error("Error sending contact form:", error);
+      console.error("Error:", error);
       toast({
-        title: "Erro ao enviar",
-        description: "Tente novamente mais tarde.",
+        title: "Erro",
+        description: "Tente novamente.",
         variant: "destructive",
       });
     } finally {
