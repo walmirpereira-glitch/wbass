@@ -93,7 +93,7 @@ export function ProductGalleryModal({
                 <button
                   key={idx}
                   onClick={() => onIndexChange(idx)}
-                  className={`flex-shrink-0 w-16 h-16 lg:w-full lg:h-auto lg:aspect-square rounded-md overflow-hidden border-2 transition-all bg-white ${
+                  className={`flex-shrink-0 w-16 h-16 lg:w-full lg:h-auto lg:aspect-square rounded-md overflow-hidden border-2 transition-all bg-white p-1 flex items-center justify-center ${
                     idx === currentIndex
                       ? "border-green-600 shadow-md"
                       : "border-gray-300 hover:border-green-500"
@@ -103,7 +103,7 @@ export function ProductGalleryModal({
                   <img
                     src={img}
                     alt={`${product.name} - Miniatura ${idx + 1}`}
-                    className="w-full h-full object-cover object-center"
+                    className="max-w-full max-h-full object-contain object-center"
                   />
                 </button>
               ))}
