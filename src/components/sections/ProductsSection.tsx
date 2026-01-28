@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { ArrowRight, Speaker, Crown, Zap, Eye } from "lucide-react";
+import { ArrowRight, Speaker, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ProductGalleryModal } from "./ProductGalleryModal";
 
@@ -208,20 +208,12 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         )}
         {/* Hover overlay */}
         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-          {product.gallery && product.gallery.length > 0 ? (
-            <button 
-              onClick={handleImageClick}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm py-2.5 rounded transition-colors"
-            >
-              Ver Detalhes
-            </button>
-          ) : (
-            <Link to="/orcamento">
-              <button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm py-2.5 rounded transition-colors">
-                Solicitar Orçamento
-              </button>
-            </Link>
-          )}
+          <button 
+            onClick={product.gallery && product.gallery.length > 0 ? handleImageClick : undefined}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm py-2.5 rounded transition-colors"
+          >
+            Ver Detalhes
+          </button>
         </div>
       </div>
 
@@ -233,20 +225,9 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
           {product.description}
         </p>
-        <p className="text-xs text-muted-foreground/70 mb-3">
+        <p className="text-xs text-muted-foreground/70">
           {product.specs}
         </p>
-        
-        {/* CTA to view gallery */}
-        {product.gallery && product.gallery.length > 0 && (
-          <button 
-            onClick={handleImageClick}
-            className="text-sm text-primary font-semibold hover:text-primary/80 transition-colors flex items-center gap-1"
-          >
-            <Eye className="w-4 h-4" />
-            Ver Detalhes e Preço
-          </button>
-        )}
       </div>
     </motion.article>
   );
