@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useMemo } from "react";
 import heroInicio1 from "@/assets/hero-inicio1.jpg";
 import heroInicio2 from "@/assets/hero-inicio2.jpg";
+import heroInicio3 from "@/assets/gallery/gallery-8.jpg";
 
 // Gallery images
 import gallery1 from "@/assets/gallery/gallery-1.jpg";
@@ -27,6 +28,11 @@ const heroSlides = [
     image: heroInicio2,
     title: "QUALIDADE",
     subtitle: "COMPROVADA!",
+  },
+  {
+    image: heroInicio3,
+    title: "DESENVOLVIMENTO",
+    subtitle: "COM TECNOLOGIA!",
   },
 ];
 
