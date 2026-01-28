@@ -1,7 +1,17 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { MapPin, Phone, Mail, Instagram, Facebook, Youtube } from "lucide-react";
+import { useRef, useState } from "react";
+import { MapPin, Phone, Mail, Instagram, Facebook } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
   {
@@ -28,9 +38,82 @@ const socialLinks = [
   { icon: Facebook, href: "https://www.facebook.com/wbass.cabinets.2025", label: "Facebook" },
 ];
 
+const formSchema = z.object({
+  nomeCompleto: z.string().trim().min(1, "Nome completo é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres"),
+  email: z.string().trim().email("Email inválido").max(255, "Email deve ter no máximo 255 caracteres"),
+  telefone: z.string().trim().min(1, "Telefone é obrigatório").max(20, "Telefone inválido"),
+  enderecoCompleto: z.string().trim().min(1, "Endereço completo é obrigatório").max(300, "Endereço deve ter no máximo 300 caracteres"),
+  cpf: z.string().trim().min(11, "CPF inválido").max(14, "CPF inválido"),
+  pagamentoAVista: z.boolean().default(false),
+  pagamentoParcelado: z.boolean().default(false),
+  numeroParcelas: z.string().optional(),
+  mensagem: z.string().trim().max(1000, "Mensagem deve ter no máximo 1000 caracteres").optional(),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
 export function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      nomeCompleto: "",
+      email: "",
+      telefone: "",
+      enderecoCompleto: "",
+      cpf: "",
+      pagamentoAVista: false,
+      pagamentoParcelado: false,
+      numeroParcelas: "",
+      mensagem: "",
+    },
+  });
+
+  const pagamentoParcelado = form.watch("pagamentoParcelado");
+
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    try {
+      const formaPagamento = data.pagamentoAVista 
+        ? "À Vista" 
+        : data.pagamentoParcelado 
+          ? `Parcelado em ${data.numeroParcelas}x` 
+          : "Não especificado";
+
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          nomeCompleto: data.nomeCompleto,
+          email: data.email,
+          telefone: data.telefone,
+          enderecoCompleto: data.enderecoCompleto,
+          cpf: data.cpf,
+          formaPagamento,
+          mensagem: data.mensagem || "",
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Mensagem enviada!",
+        description: "Entraremos em contato em breve.",
+      });
+      form.reset();
+    } catch (error) {
+      console.error("Error sending contact form:", error);
+      toast({
+        title: "Erro ao enviar",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section
@@ -109,71 +192,230 @@ export function ContactSection() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <form className="space-y-6 bg-gray-50 p-8 rounded-lg border border-gray-200">
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-gray-600 block mb-3 font-medium">
-                    Nome
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="Seu nome"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-gray-600 block mb-3 font-medium">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="seu@email.com"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 block mb-3 font-medium">
-                  Telefone / WhatsApp
-                </label>
-                <input
-                  type="tel"
-                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                  placeholder="(00) 00000-0000"
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 bg-gray-50 p-8 rounded-lg border border-gray-200">
+                <FormField
+                  control={form.control}
+                  name="nomeCompleto"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
+                        Nome Completo
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Seu nome completo" 
+                          className="bg-white border-gray-200 focus:border-primary"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div>
-                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 block mb-3 font-medium">
-                  Produto de Interesse
-                </label>
-                <select
-                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300"
+
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
+                          Email
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="email"
+                            placeholder="seu@email.com" 
+                            className="bg-white border-gray-200 focus:border-primary"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="telefone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
+                          Telefone
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="tel"
+                            placeholder="(00) 00000-0000" 
+                            className="bg-white border-gray-200 focus:border-primary"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="enderecoCompleto"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
+                        Endereço Completo
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Rua, número, bairro, cidade, estado" 
+                          className="bg-white border-gray-200 focus:border-primary"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="cpf"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
+                        CPF para Transportadora
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="000.000.000-00" 
+                          className="bg-white border-gray-200 focus:border-primary"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Payment Options */}
+                <div>
+                  <span className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-3">
+                    Forma de Pagamento
+                  </span>
+                  <div className="space-y-3">
+                    <FormField
+                      control={form.control}
+                      name="pagamentoAVista"
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <Checkbox 
+                              checked={field.value}
+                              onCheckedChange={(checked) => {
+                                field.onChange(checked);
+                                if (checked) {
+                                  form.setValue("pagamentoParcelado", false);
+                                  form.setValue("numeroParcelas", "");
+                                }
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm text-gray-700 font-normal cursor-pointer !mt-0">
+                            À Vista
+                          </FormLabel>
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <FormField
+                        control={form.control}
+                        name="pagamentoParcelado"
+                        render={({ field }) => (
+                          <FormItem className="flex items-center gap-3">
+                            <FormControl>
+                              <Checkbox 
+                                checked={field.value}
+                                onCheckedChange={(checked) => {
+                                  field.onChange(checked);
+                                  if (checked) {
+                                    form.setValue("pagamentoAVista", false);
+                                  } else {
+                                    form.setValue("numeroParcelas", "");
+                                  }
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="text-sm text-gray-700 font-normal cursor-pointer !mt-0">
+                              Parcelado
+                            </FormLabel>
+                          </FormItem>
+                        )}
+                      />
+
+                      {pagamentoParcelado && (
+                        <FormField
+                          control={form.control}
+                          name="numeroParcelas"
+                          render={({ field }) => (
+                            <FormItem className="flex items-center gap-2">
+                              <span className="text-sm text-gray-600">em até</span>
+                              <FormControl>
+                                <select
+                                  className="bg-white border border-gray-200 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-primary"
+                                  {...field}
+                                >
+                                  <option value="">Selecione</option>
+                                  {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
+                                    <option key={num} value={num}>
+                                      {num}x
+                                    </option>
+                                  ))}
+                                </select>
+                              </FormControl>
+                              <span className="text-sm text-gray-600">vezes</span>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="mensagem"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
+                        Mensagem
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          rows={4}
+                          placeholder="Conte-nos sobre sua necessidade..."
+                          className="bg-white border-gray-200 focus:border-primary resize-none"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button 
+                  type="submit"
+                  variant="wbassFilled"
+                  size="lg"
+                  className="w-full"
+                  disabled={isSubmitting}
                 >
-                  <option value="">Selecione um produto</option>
-                  <option value="wb112">WB 112 - Compacto</option>
-                  <option value="wb210">WB 210 - Versátil</option>
-                  <option value="wb410">WB 410 - Profissional</option>
-                  <option value="wb115">WB 115 - Graves Profundos</option>
-                  <option value="outro">Outro / Personalizado</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 block mb-3 font-medium">
-                  Mensagem
-                </label>
-                <textarea
-                  rows={4}
-                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400 resize-none"
-                  placeholder="Conte-nos sobre sua necessidade..."
-                />
-              </div>
-              <button 
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-lg transition-colors text-sm uppercase tracking-wider"
-              >
-                Enviar Mensagem
-              </button>
-            </form>
+                  {isSubmitting ? "Enviando..." : "Enviar Mensagem"}
+                </Button>
+              </form>
+            </Form>
           </motion.div>
         </div>
       </div>
