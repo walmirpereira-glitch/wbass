@@ -85,7 +85,7 @@ export function ProductGalleryModal({
         </button>
 
         {/* Gallery Layout */}
-        <div className="flex flex-col lg:flex-row min-h-[400px] lg:min-h-[550px]">
+        <div className="flex flex-col lg:flex-row min-h-[500px] lg:min-h-[700px]">
           {/* Thumbnails - Left side on desktop */}
           {images.length > 1 && (
             <div className="order-3 lg:order-1 flex lg:flex-col gap-3 p-4 bg-gray-100 lg:w-24 overflow-x-auto lg:overflow-y-auto border-t lg:border-t-0 lg:border-r border-gray-200">
@@ -117,7 +117,7 @@ export function ProductGalleryModal({
                 <img
                   src={images[currentIndex]}
                   alt={`${product.name} - Imagem ${currentIndex + 1}`}
-                  className="max-w-full max-h-[450px] lg:max-h-[550px] object-contain object-center"
+                  className="max-w-full max-h-[630px] lg:max-h-[770px] object-contain object-center"
                 />
               )}
             </div>
