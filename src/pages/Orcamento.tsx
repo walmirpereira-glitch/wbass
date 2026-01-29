@@ -4,9 +4,9 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
-import { FileText, Download, Plus, Minus, Crown, Zap } from "lucide-react";
-import jsPDF from "jspdf";
+import { Send, Plus, Minus, Crown, Zap, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
   id: string;
@@ -129,13 +129,15 @@ interface CartItem {
 const Orcamento = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    name: "",
+    nomeCompleto: "",
     email: "",
-    phone: "",
-    city: "",
+    cpf: "",
+    endereco: "",
+    cidade: "",
+    estado: "",
   });
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -172,11 +174,11 @@ const Orcamento = () => {
     0
   );
 
-  const generatePDF = () => {
-    if (!formData.name || !formData.email || !formData.phone) {
+  const handleSubmit = async () => {
+    if (!formData.nomeCompleto || !formData.email || !formData.cpf || !formData.endereco || !formData.cidade || !formData.estado) {
       toast({
         title: "Campos obrigatórios",
-        description: "Por favor, preencha todos os dados de contato.",
+        description: "Por favor, preencha todos os dados.",
         variant: "destructive",
       });
       return;
@@ -191,167 +193,48 @@ const Orcamento = () => {
       return;
     }
 
-    setIsGenerating(true);
+    setIsSubmitting(true);
 
     try {
-      const doc = new jsPDF();
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 20;
-      let y = 20;
-
-      // Header
-      doc.setFillColor(26, 26, 26);
-      doc.rect(0, 0, pageWidth, 50, "F");
-
-      doc.setTextColor(80, 200, 120);
-      doc.setFontSize(28);
-      doc.setFont("helvetica", "bold");
-      doc.text("WBASS CABINETS", margin, 30);
-
-      doc.setTextColor(150, 150, 150);
-      doc.setFontSize(10);
-      doc.text("Caixas de Som para Contrabaixo", margin, 40);
-
-      y = 70;
-
-      // Title
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(20);
-      doc.setFont("helvetica", "bold");
-      doc.text("ORÇAMENTO", margin, y);
-
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      const date = new Date().toLocaleDateString("pt-BR");
-      doc.text(`Data: ${date}`, pageWidth - margin - 40, y);
-
-      y += 20;
-
-      // Client info
-      doc.setFillColor(245, 245, 245);
-      doc.rect(margin, y - 5, pageWidth - margin * 2, 40, "F");
-
-      doc.setTextColor(80, 200, 120);
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text("DADOS DO CLIENTE", margin + 5, y + 5);
-
-      doc.setTextColor(50, 50, 50);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      y += 15;
-      doc.text(`Nome: ${formData.name}`, margin + 5, y);
-      y += 7;
-      doc.text(`Email: ${formData.email}`, margin + 5, y);
-      y += 7;
-      doc.text(
-        `Telefone: ${formData.phone}${formData.city ? ` | Cidade: ${formData.city}` : ""}`,
-        margin + 5,
-        y
-      );
-
-      y += 25;
-
-      // Products header
-      doc.setFillColor(80, 200, 120);
-      doc.rect(margin, y - 5, pageWidth - margin * 2, 12, "F");
-
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
-      doc.text("PRODUTO", margin + 5, y + 3);
-      doc.text("ESPECIFICAÇÕES", margin + 70, y + 3);
-      doc.text("QTD", pageWidth - margin - 55, y + 3);
-      doc.text("VALOR", pageWidth - margin - 30, y + 3);
-
-      y += 15;
-
-      // Products list
-      doc.setTextColor(50, 50, 50);
-      doc.setFont("helvetica", "normal");
-
-      cart.forEach((item, index) => {
-        if (index % 2 === 0) {
-          doc.setFillColor(250, 250, 250);
-          doc.rect(margin, y - 5, pageWidth - margin * 2, 14, "F");
-        }
-
-        const lineLabel = item.product.line === "premium" ? "[Premium]" : "[Easy]";
-        
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(9);
-        doc.text(`${item.product.name}`, margin + 5, y + 1);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(7);
-        doc.setTextColor(100, 100, 100);
-        doc.text(`${lineLabel} ${item.product.description}`, margin + 5, y + 6);
-        doc.setTextColor(50, 50, 50);
-        doc.setFontSize(9);
-        doc.text(item.product.specs, margin + 70, y + 3);
-        doc.text(item.quantity.toString(), pageWidth - margin - 50, y + 3);
-        doc.text(
-          `R$ ${(item.product.price * item.quantity).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
-          pageWidth - margin - 30,
-          y + 3
-        );
-
-        y += 16;
+      const { error } = await supabase.functions.invoke("send-orcamento-email", {
+        body: {
+          ...formData,
+          produtos: cart.map((item) => ({
+            name: item.product.name,
+            quantity: item.quantity,
+            price: item.product.price,
+            line: item.product.line,
+          })),
+          total,
+        },
       });
 
-      y += 10;
-
-      // Total
-      doc.setFillColor(26, 26, 26);
-      doc.rect(pageWidth - margin - 90, y - 5, 90, 15, "F");
-
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text("TOTAL:", pageWidth - margin - 85, y + 5);
-      doc.setTextColor(80, 200, 120);
-      doc.text(
-        `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
-        pageWidth - margin - 45,
-        y + 5
-      );
-
-      y += 30;
-
-      // Footer note
-      doc.setTextColor(100, 100, 100);
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "italic");
-      doc.text("Orçamento válido por 15 dias.", margin, y);
-      doc.text("Valores sujeitos a alteração sem aviso prévio.", margin, y + 5);
-      doc.text("Frete não incluso.", margin, y + 10);
-
-      y += 25;
-
-      // Contact
-      doc.setTextColor(80, 200, 120);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
-      doc.text("Entre em contato:", margin, y);
-      doc.setTextColor(50, 50, 50);
-      doc.setFont("helvetica", "normal");
-      doc.text("contato@wbasscabinets.com | WhatsApp: +55 (00) 99999-9999", margin, y + 7);
-
-      // Save
-      doc.save(`orcamento-wbass-${Date.now()}.pdf`);
+      if (error) throw error;
 
       toast({
-        title: "PDF gerado com sucesso!",
-        description: "O orçamento foi baixado para seu dispositivo.",
+        title: "Orçamento enviado!",
+        description: "Entraremos em contato em breve com a proposta oficial.",
       });
+
+      // Reset form
+      setFormData({
+        nomeCompleto: "",
+        email: "",
+        cpf: "",
+        endereco: "",
+        cidade: "",
+        estado: "",
+      });
+      setCart([]);
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      console.error("Error:", error);
       toast({
-        title: "Erro ao gerar PDF",
-        description: "Tente novamente em alguns instantes.",
+        title: "Erro ao enviar",
+        description: "Tente novamente ou entre em contato pelo WhatsApp.",
         variant: "destructive",
       });
     } finally {
-      setIsGenerating(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -447,9 +330,9 @@ const Orcamento = () => {
                 <span className="text-gradient-green block">ORÇAMENTO</span>
               </h1>
               <div className="divider-green mx-auto mb-6" />
-              <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-                Selecione os produtos desejados, preencha seus dados e gere um
-                PDF com seu orçamento personalizado.
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Caso opte por finalizar sua compra, preencha o formulário abaixo selecionando o produto desejado. 
+                Em seguida, enviaremos a proposta oficial com as especificações da caixa escolhida, prazos de entrega e dados para pagamento.
               </p>
             </div>
 
@@ -462,54 +345,80 @@ const Orcamento = () => {
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Nome *
+                    Nome Completo *
                   </label>
                   <input
                     type="text"
-                    name="name"
-                    value={formData.name}
+                    name="nomeCompleto"
+                    value={formData.nomeCompleto}
                     onChange={handleInputChange}
-                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground/50"
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
                     placeholder="Seu nome completo"
                   />
                 </div>
                 <div>
                   <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Email *
+                    E-mail *
                   </label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground/50"
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
                     placeholder="seu@email.com"
                   />
                 </div>
                 <div>
                   <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Telefone / WhatsApp *
+                    CPF para Transportadora *
                   </label>
                   <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
+                    type="text"
+                    name="cpf"
+                    value={formData.cpf}
                     onChange={handleInputChange}
-                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground/50"
-                    placeholder="(00) 00000-0000"
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                    placeholder="000.000.000-00"
                   />
                 </div>
                 <div>
                   <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Cidade / Estado
+                    Endereço (Rua, Número, CEP) *
                   </label>
                   <input
                     type="text"
-                    name="city"
-                    value={formData.city}
+                    name="endereco"
+                    value={formData.endereco}
                     onChange={handleInputChange}
-                    className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground/50"
-                    placeholder="São Paulo, SP"
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                    placeholder="Rua Exemplo, 123 - CEP 00000-000"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                    Cidade *
+                  </label>
+                  <input
+                    type="text"
+                    name="cidade"
+                    value={formData.cidade}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                    placeholder="Sua cidade"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                    Estado *
+                  </label>
+                  <input
+                    type="text"
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                    placeholder="SP"
                   />
                 </div>
               </div>
@@ -555,7 +464,7 @@ const Orcamento = () => {
               </div>
             </div>
 
-            {/* Summary and Generate */}
+            {/* Summary and Submit */}
             <div className="bg-charcoal p-8 rounded-lg border border-border">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div>
@@ -572,12 +481,12 @@ const Orcamento = () => {
                 <Button
                   variant="wbassFilled"
                   size="xl"
-                  onClick={generatePDF}
-                  disabled={isGenerating}
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
                   className="flex items-center gap-2"
                 >
-                  <Download className="w-5 h-5" />
-                  {isGenerating ? "Gerando..." : "Gerar PDF do Orçamento"}
+                  <Send className="w-5 h-5" />
+                  {isSubmitting ? "Enviando..." : "Enviar Orçamento"}
                 </Button>
               </div>
             </div>
