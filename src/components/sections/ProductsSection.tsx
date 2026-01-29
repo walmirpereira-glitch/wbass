@@ -59,6 +59,10 @@ import img112dLateral2 from "@/assets/products/112d-lateral2.jpg";
 import img112dCima from "@/assets/products/112d-cima.jpg";
 import img112dTraseira from "@/assets/products/112d-traseira.jpg";
 
+// Product images - 112ND
+import img112ndFrente from "@/assets/products/112nd-frente.png";
+import img112ndTraseira from "@/assets/products/112nd-traseira.png";
+import img112ndLateral from "@/assets/products/112nd-lateral.png";
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
 const product210dGallery = [img210dFrente, img210dLateral1, img210dLateral2, img210dTraseira];
 const productEasy2x10dGallery = [imgEasy2x10dFrente, imgEasy2x10dLateral1, imgEasy2x10dLateral2, imgEasy2x10dCima, imgEasy2x10dTraseira];
@@ -66,6 +70,7 @@ const productEasy1x10dGallery = [imgEasy1x10dFrente, imgEasy1x10dLateral1, imgEa
 const productEasy1x12dGallery = [imgEasy1x12dFrente, imgEasy1x12dLateral1, imgEasy1x12dLateral2, imgEasy1x12dCima, imgEasy1x12dTraseira];
 const product410dpGallery = [img410dpFrente];
 const product112dGallery = [img112dFrente, img112dLateral1, img112dLateral2, img112dCima, img112dTraseira];
+const product112ndGallery = [img112ndFrente, img112ndLateral, img112ndTraseira];
 
 const premiumProducts: Product[] = [
   {
@@ -123,6 +128,8 @@ const premiumProducts: Product[] = [
     description: "1 falante Italiano em neodímio de 12\", não possui driver",
     specs: "350W RMS | 4 ou 8 ohms",
     price: 4329.60,
+    image: img112ndFrente,
+    gallery: product112ndGallery,
   },
   {
     id: "115d",
