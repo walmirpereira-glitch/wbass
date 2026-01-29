@@ -202,7 +202,7 @@ Mensagem: ${data.mensagem || "Não informada"}`);
                       <FormControl>
                         <Input 
                           placeholder="Seu nome completo" 
-                          className="bg-white border-gray-200 focus:border-primary"
+                          className="bg-white border-gray-200 focus:border-primary text-gray-900 placeholder:text-gray-400"
                           {...field} 
                         />
                       </FormControl>
@@ -223,7 +223,7 @@ Mensagem: ${data.mensagem || "Não informada"}`);
                         <Input 
                           type="email"
                           placeholder="seu@email.com" 
-                          className="bg-white border-gray-200 focus:border-primary"
+                          className="bg-white border-gray-200 focus:border-primary text-gray-900 placeholder:text-gray-400"
                           {...field} 
                         />
                       </FormControl>
@@ -244,7 +244,7 @@ Mensagem: ${data.mensagem || "Não informada"}`);
                         <Input 
                           type="tel"
                           placeholder="(00) 00000-0000" 
-                          className="bg-white border-gray-200 focus:border-primary"
+                          className="bg-white border-gray-200 focus:border-primary text-gray-900 placeholder:text-gray-400"
                           {...field} 
                         />
                       </FormControl>
@@ -265,7 +265,7 @@ Mensagem: ${data.mensagem || "Não informada"}`);
                         <Textarea 
                           rows={5}
                           placeholder="Conte-nos sobre sua necessidade..."
-                          className="bg-white border-gray-200 focus:border-primary resize-none"
+                          className="bg-white border-gray-200 focus:border-primary resize-none text-gray-900 placeholder:text-gray-400"
                           {...field} 
                         />
                       </FormControl>
