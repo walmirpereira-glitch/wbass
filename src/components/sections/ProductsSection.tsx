@@ -35,9 +35,17 @@ import imgEasy2x10dLateral2 from "@/assets/products/easy-2x10d-lateral2.jpg";
 import imgEasy2x10dCima from "@/assets/products/easy-2x10d-cima.jpg";
 import imgEasy2x10dTraseira from "@/assets/products/easy-2x10d-traseira.jpg";
 
+// Product images - Easy 1x10D
+import imgEasy1x10dFrente from "@/assets/products/easy-1x10d-frente.jpg";
+import imgEasy1x10dLateral1 from "@/assets/products/easy-1x10d-lateral1.jpg";
+import imgEasy1x10dLateral2 from "@/assets/products/easy-1x10d-lateral2.jpg";
+import imgEasy1x10dCima from "@/assets/products/easy-1x10d-cima.jpg";
+import imgEasy1x10dTraseira from "@/assets/products/easy-1x10d-traseira.jpg";
+
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
 const product210dGallery = [img210dFrente, img210dLateral1, img210dLateral2, img210dTraseira];
 const productEasy2x10dGallery = [imgEasy2x10dFrente, imgEasy2x10dLateral1, imgEasy2x10dLateral2, imgEasy2x10dCima, imgEasy2x10dTraseira];
+const productEasy1x10dGallery = [imgEasy1x10dFrente, imgEasy1x10dLateral1, imgEasy1x10dLateral2, imgEasy1x10dCima, imgEasy1x10dTraseira];
 
 const premiumProducts: Product[] = [
   {
@@ -118,6 +126,8 @@ const easyProducts: Product[] = [
     description: "1 falante 10\" em ferrite nacional + driver com ajuste de volume 3 posições",
     specs: "300W RMS | 4 ou 8 ohms",
     price: 2599.00,
+    image: imgEasy1x10dFrente,
+    gallery: productEasy1x10dGallery,
   },
   {
     id: "easy-2x10d",
