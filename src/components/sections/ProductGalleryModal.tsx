@@ -117,7 +117,7 @@ export function ProductGalleryModal({
                 <img
                   src={images[currentIndex]}
                   alt={`${product.name} - Imagem ${currentIndex + 1}`}
-                  className="max-w-full max-h-[400px] lg:max-h-[500px] object-contain object-center"
+                  className="max-w-full max-h-[450px] lg:max-h-[550px] object-contain object-center"
                 />
               )}
             </div>
