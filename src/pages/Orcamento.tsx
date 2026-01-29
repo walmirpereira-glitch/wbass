@@ -132,7 +132,9 @@ const Orcamento = () => {
     nomeCompleto: "",
     email: "",
     cpf: "",
-    endereco: "",
+    rua: "",
+    numero: "",
+    cep: "",
     cidade: "",
     estado: "",
   });
@@ -175,7 +177,7 @@ const Orcamento = () => {
   );
 
   const handleSubmit = async () => {
-    if (!formData.nomeCompleto || !formData.email || !formData.cpf || !formData.endereco || !formData.cidade || !formData.estado) {
+    if (!formData.nomeCompleto || !formData.email || !formData.cpf || !formData.rua || !formData.numero || !formData.cep || !formData.cidade || !formData.estado) {
       toast({
         title: "Campos obrigatórios",
         description: "Por favor, preencha todos os dados.",
@@ -196,9 +198,15 @@ const Orcamento = () => {
     setIsSubmitting(true);
 
     try {
+      const endereco = `${formData.rua}, ${formData.numero} - CEP ${formData.cep}`;
       const { error } = await supabase.functions.invoke("send-orcamento-email", {
         body: {
-          ...formData,
+          nomeCompleto: formData.nomeCompleto,
+          email: formData.email,
+          cpf: formData.cpf,
+          endereco,
+          cidade: formData.cidade,
+          estado: formData.estado,
           produtos: cart.map((item) => ({
             name: item.product.name,
             quantity: item.quantity,
@@ -221,7 +229,9 @@ const Orcamento = () => {
         nomeCompleto: "",
         email: "",
         cpf: "",
-        endereco: "",
+        rua: "",
+        numero: "",
+        cep: "",
         cidade: "",
         estado: "",
       });
@@ -384,15 +394,41 @@ const Orcamento = () => {
                 </div>
                 <div>
                   <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Endereço (Rua, Número, CEP) *
+                    Rua *
                   </label>
                   <input
                     type="text"
-                    name="endereco"
-                    value={formData.endereco}
+                    name="rua"
+                    value={formData.rua}
                     onChange={handleInputChange}
                     className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="Rua Exemplo, 123 - CEP 00000-000"
+                    placeholder="Nome da rua"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                    Número *
+                  </label>
+                  <input
+                    type="text"
+                    name="numero"
+                    value={formData.numero}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                    placeholder="123"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                    CEP *
+                  </label>
+                  <input
+                    type="text"
+                    name="cep"
+                    value={formData.cep}
+                    onChange={handleInputChange}
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                    placeholder="00000-000"
                   />
                 </div>
                 <div>
