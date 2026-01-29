@@ -71,8 +71,6 @@ const premiumProducts: Product[] = [
     description: "2 falantes Italianos em neodímio de 10\" + driver com ajuste de volume 3 posições",
     specs: "400W RMS | 8 ohms",
     price: 5602.08,
-    image: img210dFrente,
-    gallery: product210dGallery,
   },
   {
     id: "210dp",
@@ -81,6 +79,8 @@ const premiumProducts: Product[] = [
     description: "2 falantes Italianos em neodímio de 10\" + driver com ajuste de volume 3 posições",
     specs: "500W RMS | 4 ohms",
     price: 5781.60,
+    image: img210dFrente,
+    gallery: product210dGallery,
   },
   {
     id: "212d",
