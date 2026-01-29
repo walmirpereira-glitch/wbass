@@ -8,9 +8,9 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import contactShowcase from "@/assets/contact-showcase.jpg";
 
 const contactInfo = [
   {
@@ -28,7 +28,7 @@ const contactInfo = [
   {
     icon: MapPin,
     label: "Localização",
-    value: "São Paulo, SP - Brasil",
+    value: "São José dos Campos, SP - Brasil",
   },
 ];
 
@@ -41,11 +41,6 @@ const formSchema = z.object({
   nomeCompleto: z.string().trim().min(1, "Nome completo é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres"),
   email: z.string().trim().email("Email inválido").max(255, "Email deve ter no máximo 255 caracteres"),
   telefone: z.string().trim().min(1, "Telefone é obrigatório").max(20, "Telefone inválido"),
-  enderecoCompleto: z.string().trim().min(1, "Endereço completo é obrigatório").max(300, "Endereço deve ter no máximo 300 caracteres"),
-  cpf: z.string().trim().min(11, "CPF inválido").max(14, "CPF inválido"),
-  pagamentoAVista: z.boolean().default(false),
-  pagamentoParcelado: z.boolean().default(false),
-  numeroParcelas: z.string().optional(),
   mensagem: z.string().trim().max(1000, "Mensagem deve ter no máximo 1000 caracteres").optional(),
 });
 
@@ -63,44 +58,26 @@ export function ContactSection() {
       nomeCompleto: "",
       email: "",
       telefone: "",
-      enderecoCompleto: "",
-      cpf: "",
-      pagamentoAVista: false,
-      pagamentoParcelado: false,
-      numeroParcelas: "",
       mensagem: "",
     },
   });
 
-  const pagamentoParcelado = form.watch("pagamentoParcelado");
-
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const formaPagamento = data.pagamentoAVista 
-        ? "À Vista" 
-        : data.pagamentoParcelado 
-          ? `Parcelado em ${data.numeroParcelas}x` 
-          : "Não especificado";
+      // Build email message via mailto
+      const subject = encodeURIComponent("Novo Contato - Wbass Cabinets");
+      const body = encodeURIComponent(`Nome: ${data.nomeCompleto}
+Email: ${data.email}
+Telefone: ${data.telefone}
+Mensagem: ${data.mensagem || "Não informada"}`);
 
-      // Build WhatsApp message
-      const message = `*Novo Contato - Wbass Cabinets*
-
-*Nome:* ${data.nomeCompleto}
-*Email:* ${data.email}
-*Telefone:* ${data.telefone}
-*Endereço:* ${data.enderecoCompleto}
-*CPF:* ${data.cpf}
-*Pagamento:* ${formaPagamento}
-${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
-
-      // Open WhatsApp with the message
-      const whatsappUrl = `https://wa.me/5512974081582?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, "_blank");
+      // Open email client
+      window.open(`mailto:contato@wbasscabinets.com?subject=${subject}&body=${body}`, "_blank");
 
       toast({
-        title: "Redirecionando para WhatsApp",
-        description: "Complete o envio no WhatsApp.",
+        title: "Abrindo cliente de email",
+        description: "Complete o envio no seu cliente de email.",
       });
       form.reset();
     } catch (error) {
@@ -133,14 +110,12 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
               Fale Conosco
             </span>
             <h2 className="font-display text-4xl md:text-5xl text-gray-900 mb-8 tracking-wide">
-              SOLICITE SEU
-              <span className="text-primary block">ORÇAMENTO</span>
+              ENTRE EM
+              <span className="text-primary block">CONTATO</span>
             </h2>
             <div className="w-16 h-1 bg-primary mb-8" />
             <p className="text-gray-600 text-lg leading-relaxed mb-10">
-              Entre em contato conosco para tirar dúvidas, solicitar orçamento ou 
-              conhecer mais sobre nossos produtos. Nossa equipe está pronta para 
-              ajudar você a encontrar o cabinet perfeito para seu som.
+              Não encontrou o modelo ideal ou ficou com alguma dúvida técnica? Nossa equipe está à disposição para ajudar você a escolher o cabinet perfeito para o seu som. Entre em contato agora para tirar dúvidas ou solicitar um orçamento personalizado.
             </p>
 
             {/* Contact Details */}
@@ -160,14 +135,20 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
                     <span className="text-xs uppercase tracking-[0.15em] text-gray-500 block mb-1">
                       {item.label}
                     </span>
-                    <span className="text-gray-900 font-medium">{item.value}</span>
+                    {item.href ? (
+                      <a href={item.href} className="text-gray-900 font-medium hover:text-primary transition-colors">
+                        {item.value}
+                      </a>
+                    ) : (
+                      <span className="text-gray-900 font-medium">{item.value}</span>
+                    )}
                   </div>
                 </motion.div>
               ))}
             </div>
 
             {/* Social Links */}
-            <div>
+            <div className="mb-10">
               <span className="text-xs uppercase tracking-[0.15em] text-gray-500 block mb-4">
                 Siga-nos
               </span>
@@ -176,6 +157,8 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
                   <a
                     key={link.label}
                     href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={link.label}
                     className="w-12 h-12 border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all duration-300"
                   >
@@ -184,6 +167,20 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
                 ))}
               </div>
             </div>
+
+            {/* Showcase Image */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="rounded-lg overflow-hidden shadow-lg"
+            >
+              <img 
+                src={contactShowcase} 
+                alt="Wbass Cabinet com baixo" 
+                className="w-full h-auto object-cover"
+              />
+            </motion.div>
           </motion.div>
 
           {/* Contact Form */}
@@ -214,61 +211,18 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
                   )}
                 />
 
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                          Email
-                        </FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="email"
-                            placeholder="seu@email.com" 
-                            className="bg-white border-gray-200 focus:border-primary"
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="telefone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                          Telefone
-                        </FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="tel"
-                            placeholder="(00) 00000-0000" 
-                            className="bg-white border-gray-200 focus:border-primary"
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
                 <FormField
                   control={form.control}
-                  name="enderecoCompleto"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                        Endereço Completo
+                        Email
                       </FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Rua, número, bairro, cidade, estado" 
+                          type="email"
+                          placeholder="seu@email.com" 
                           className="bg-white border-gray-200 focus:border-primary"
                           {...field} 
                         />
@@ -280,15 +234,16 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
 
                 <FormField
                   control={form.control}
-                  name="cpf"
+                  name="telefone"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                        CPF para Transportadora
+                        Telefone
                       </FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="000.000.000-00" 
+                          type="tel"
+                          placeholder="(00) 00000-0000" 
                           className="bg-white border-gray-200 focus:border-primary"
                           {...field} 
                         />
@@ -297,92 +252,6 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
                     </FormItem>
                   )}
                 />
-
-                {/* Payment Options */}
-                <div>
-                  <span className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-3">
-                    Forma de Pagamento
-                  </span>
-                  <div className="space-y-3">
-                    <FormField
-                      control={form.control}
-                      name="pagamentoAVista"
-                      render={({ field }) => (
-                        <FormItem className="flex items-center gap-3">
-                          <FormControl>
-                            <Checkbox 
-                              checked={field.value}
-                              onCheckedChange={(checked) => {
-                                field.onChange(checked);
-                                if (checked) {
-                                  form.setValue("pagamentoParcelado", false);
-                                  form.setValue("numeroParcelas", "");
-                                }
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-sm text-gray-700 font-normal cursor-pointer !mt-0">
-                            À Vista
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <FormField
-                        control={form.control}
-                        name="pagamentoParcelado"
-                        render={({ field }) => (
-                          <FormItem className="flex items-center gap-3">
-                            <FormControl>
-                              <Checkbox 
-                                checked={field.value}
-                                onCheckedChange={(checked) => {
-                                  field.onChange(checked);
-                                  if (checked) {
-                                    form.setValue("pagamentoAVista", false);
-                                  } else {
-                                    form.setValue("numeroParcelas", "");
-                                  }
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="text-sm text-gray-700 font-normal cursor-pointer !mt-0">
-                              Parcelado
-                            </FormLabel>
-                          </FormItem>
-                        )}
-                      />
-
-                      {pagamentoParcelado && (
-                        <FormField
-                          control={form.control}
-                          name="numeroParcelas"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center gap-2">
-                              <span className="text-sm text-gray-600">em até</span>
-                              <FormControl>
-                                <select
-                                  className="bg-white border border-gray-200 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-primary"
-                                  {...field}
-                                >
-                                  <option value="">Selecione</option>
-                                  {Array.from({ length: 12 }, (_, i) => i + 1).map((num) => (
-                                    <option key={num} value={num}>
-                                      {num}x
-                                    </option>
-                                  ))}
-                                </select>
-                              </FormControl>
-                              <span className="text-sm text-gray-600">vezes</span>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
 
                 <FormField
                   control={form.control}
@@ -394,7 +263,7 @@ ${data.mensagem ? `*Mensagem:* ${data.mensagem}` : ""}`;
                       </FormLabel>
                       <FormControl>
                         <Textarea 
-                          rows={4}
+                          rows={5}
                           placeholder="Conte-nos sobre sua necessidade..."
                           className="bg-white border-gray-200 focus:border-primary resize-none"
                           {...field} 
