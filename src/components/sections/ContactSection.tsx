@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import contactShowcase from "@/assets/contact-showcase.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
   {
@@ -65,26 +66,22 @@ export function ContactSection() {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      // Build email message via mailto
-      const subject = encodeURIComponent("Novo Contato - Wbass Cabinets");
-      const body = encodeURIComponent(`Nome: ${data.nomeCompleto}
-Email: ${data.email}
-Telefone: ${data.telefone}
-Mensagem: ${data.mensagem || "Não informada"}`);
+      const { data: response, error } = await supabase.functions.invoke("send-contact-email", {
+        body: data,
+      });
 
-      // Open email client
-      window.open(`mailto:contato@wbasscabinets.com?subject=${subject}&body=${body}`, "_blank");
+      if (error) throw error;
 
       toast({
-        title: "Abrindo cliente de email",
-        description: "Complete o envio no seu cliente de email.",
+        title: "Mensagem enviada!",
+        description: "Entraremos em contato em breve.",
       });
       form.reset();
     } catch (error) {
       console.error("Error:", error);
       toast({
-        title: "Erro",
-        description: "Tente novamente.",
+        title: "Erro ao enviar",
+        description: "Tente novamente ou entre em contato pelo WhatsApp.",
         variant: "destructive",
       });
     } finally {
