@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useMemo } from "react";
 import heroInicio1 from "@/assets/hero-inicio1.jpg";
 import heroInicio2 from "@/assets/hero-inicio2.jpg";
-import heroInicio3 from "@/assets/hero-inicio3.jpg";
+import heroVideo from "@/assets/hero-video.mp4";
 
 // Gallery images
 import gallery1 from "@/assets/gallery/gallery-1.jpg";
@@ -20,17 +20,20 @@ const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery
 
 const heroSlides = [
   {
-    image: heroInicio1,
+    type: "image" as const,
+    media: heroInicio1,
     title: "MELHOR PERFORMANCE",
     subtitle: "PARA OS GRAVES...",
   },
   {
-    image: heroInicio2,
+    type: "image" as const,
+    media: heroInicio2,
     title: "QUALIDADE",
     subtitle: "COMPROVADA!",
   },
   {
-    image: heroInicio3,
+    type: "video" as const,
+    media: heroVideo,
     title: "DESENVOLVIMENTO",
     subtitle: "COM TECNOLOGIA!",
   },
@@ -91,11 +94,22 @@ export function HeroSection() {
             transition={{ duration: 0.8 }}
             className="absolute inset-0"
           >
-            <img
-              src={slide.image}
-              alt={`Wbass Cabinets - ${slide.title}`}
-              className="w-full h-full object-cover"
-            />
+            {slide.type === "video" ? (
+              <video
+                src={slide.media}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src={slide.media}
+                alt={`Wbass Cabinets - ${slide.title}`}
+                className="w-full h-full object-cover"
+              />
+            )}
           </motion.div>
         </AnimatePresence>
 
