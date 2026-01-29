@@ -229,11 +229,11 @@ function ProductCard({ product, index, isInView, delay, variant, onOpenGallery }
         onClick={product.gallery && product.gallery.length > 0 ? handleImageClick : undefined}
       >
         {product.image ? (
-          <div className="w-full h-full p-4 flex items-center justify-center bg-white">
+          <div className="w-full h-full p-2 flex items-center justify-center bg-white">
             <img 
               src={product.image} 
               alt={product.name}
-              className="max-w-full max-h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
+              className="w-[85%] h-[85%] object-contain object-center transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         ) : (
