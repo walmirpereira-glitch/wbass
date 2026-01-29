@@ -126,6 +126,8 @@ const easyProducts: Product[] = [
     description: "2 falantes 10\" em ferrite nacional + driver com ajuste de volume 3 posições",
     specs: "500W RMS | 4 ou 8 ohms",
     price: 3499.96,
+    image: imgEasy2x10dFrente,
+    gallery: productEasy2x10dGallery,
   },
   {
     id: "easy-1x12d",
