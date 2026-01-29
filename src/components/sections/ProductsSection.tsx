@@ -28,8 +28,16 @@ import img210dLateral1 from "@/assets/products/210d-lateral1.jpg";
 import img210dLateral2 from "@/assets/products/210d-lateral2.jpg";
 import img210dTraseira from "@/assets/products/210d-traseira.jpg";
 
+// Product images - Easy 2x10D
+import imgEasy2x10dFrente from "@/assets/products/easy-2x10d-frente.jpg";
+import imgEasy2x10dLateral1 from "@/assets/products/easy-2x10d-lateral1.jpg";
+import imgEasy2x10dLateral2 from "@/assets/products/easy-2x10d-lateral2.jpg";
+import imgEasy2x10dCima from "@/assets/products/easy-2x10d-cima.jpg";
+import imgEasy2x10dTraseira from "@/assets/products/easy-2x10d-traseira.jpg";
+
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
 const product210dGallery = [img210dFrente, img210dLateral1, img210dLateral2, img210dTraseira];
+const productEasy2x10dGallery = [imgEasy2x10dFrente, imgEasy2x10dLateral1, imgEasy2x10dLateral2, imgEasy2x10dCima, imgEasy2x10dTraseira];
 
 const premiumProducts: Product[] = [
   {
@@ -118,6 +126,8 @@ const easyProducts: Product[] = [
     description: "2 falantes 10\" em ferrite nacional + driver com ajuste de volume 3 posições",
     specs: "500W RMS | 4 ou 8 ohms",
     price: 3499.96,
+    image: imgEasy2x10dFrente,
+    gallery: productEasy2x10dGallery,
   },
   {
     id: "easy-1x12d",
