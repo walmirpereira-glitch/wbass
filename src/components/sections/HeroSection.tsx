@@ -6,17 +6,12 @@ import heroInicio1 from "@/assets/hero-inicio1.jpg";
 import heroInicio2 from "@/assets/hero-inicio2.jpg";
 import heroVideo from "@/assets/hero-video.mp4";
 
-// Gallery images
-import gallery1 from "@/assets/gallery/gallery-1.jpg";
-import gallery2 from "@/assets/gallery/gallery-2.jpg";
-import gallery3 from "@/assets/gallery/gallery-3.jpg";
-import gallery4 from "@/assets/gallery/gallery-4.jpg";
-import gallery5 from "@/assets/gallery/gallery-5.jpg";
-import gallery6 from "@/assets/gallery/gallery-6.jpg";
-import gallery7 from "@/assets/gallery/gallery-7.jpg";
-import gallery8 from "@/assets/gallery/gallery-8.jpg";
+// Gallery images - Lab photos
+import lab1 from "@/assets/gallery/lab-1.jpg";
+import lab2 from "@/assets/gallery/lab-2.jpg";
+import lab3 from "@/assets/gallery/lab-3.jpg";
 
-const galleryImages = [gallery1, gallery2, gallery3, gallery4, gallery5, gallery6, gallery7, gallery8];
+const galleryImages = [lab1, lab2, lab3];
 
 const heroSlides = [
   {
