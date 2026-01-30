@@ -1,10 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { AboutSection } from "@/components/sections/AboutSection";
-import { ProductsSection } from "@/components/sections/ProductsSection";
-import { VideosSection } from "@/components/sections/VideosSection";
-import { ContactSection } from "@/components/sections/ContactSection";
 
 const Index = () => {
   return (
@@ -12,10 +8,6 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
-        <AboutSection />
-        <ProductsSection />
-        <VideosSection />
-        <ContactSection />
       </main>
       <Footer />
     </div>

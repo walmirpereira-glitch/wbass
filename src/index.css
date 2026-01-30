@@ -86,9 +86,7 @@
     @apply border-border;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
+  /* Mantemos o scroll padrão do navegador (sem scroll suave) */
 
   body {
     @apply bg-background text-foreground antialiased;
