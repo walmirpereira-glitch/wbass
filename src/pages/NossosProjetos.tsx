@@ -1,13 +1,8 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 const NossosProjetos = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="min-h-screen bg-background">
       <Header />

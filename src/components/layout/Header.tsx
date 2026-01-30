@@ -38,7 +38,6 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
   const location = useLocation();
 
   const handleLinkClick = () => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     setIsMobileMenuOpen(false);
   };
 
