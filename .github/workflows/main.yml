@@ -8,8 +8,24 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Baixar código do Lovable
+      - name: Baixar código
         uses: actions/checkout@v3
 
       - name: Instalar Node.js
-        uses: actions/setup-node@
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Gerar Pasta Dist
+        run: |
+          npm install
+          npm run build
+
+      - name: Enviar para Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./public_html/
