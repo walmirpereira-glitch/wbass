@@ -11,7 +11,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import contactShowcase from "@/assets/contact-showcase.jpg";
-import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
   {
@@ -39,10 +38,10 @@ const socialLinks = [
 ];
 
 const formSchema = z.object({
-  nomeCompleto: z.string().trim().min(1, "Nome completo é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres"),
+  name: z.string().trim().min(1, "Nome completo é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres"),
   email: z.string().trim().email("Email inválido").max(255, "Email deve ter no máximo 255 caracteres"),
-  telefone: z.string().trim().min(1, "Telefone é obrigatório").max(20, "Telefone inválido"),
-  mensagem: z.string().trim().max(1000, "Mensagem deve ter no máximo 1000 caracteres").optional(),
+  phone: z.string().trim().min(1, "Telefone é obrigatório").max(20, "Telefone inválido"),
+  message: z.string().trim().max(1000, "Mensagem deve ter no máximo 1000 caracteres").optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -56,21 +55,26 @@ export function ContactSection() {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nomeCompleto: "",
+      name: "",
       email: "",
-      telefone: "",
-      mensagem: "",
+      phone: "",
+      message: "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const { data: response, error } = await supabase.functions.invoke("send-contact-email", {
-        body: data,
+      const response = await fetch("https://formspree.io/f/xaqjpzaa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(data),
       });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error("Failed to send");
 
       toast({
         title: "Mensagem enviada!",
@@ -190,7 +194,7 @@ export function ContactSection() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 bg-gray-50 p-8 rounded-lg border border-gray-200">
                 <FormField
                   control={form.control}
-                  name="nomeCompleto"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
@@ -231,7 +235,7 @@ export function ContactSection() {
 
                 <FormField
                   control={form.control}
-                  name="telefone"
+                  name="phone"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
@@ -252,7 +256,7 @@ export function ContactSection() {
 
                 <FormField
                   control={form.control}
-                  name="mensagem"
+                  name="message"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
