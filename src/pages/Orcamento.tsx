@@ -278,7 +278,7 @@ const Orcamento = () => {
             </div>
 
             {/* Formspree HTML puro (navega para a página de agradecimento do Formspree) */}
-            <form action="https://formspree.io/f/xaqjpzaa" method="POST">
+            <form action="https://formspree.io/f/xaqjpzaa" method="POST" target="_self">
               {/* Client Form */}
               <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
                 <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">

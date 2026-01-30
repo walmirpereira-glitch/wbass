@@ -133,6 +133,7 @@ export function ContactSection() {
             <form 
               action="https://formspree.io/f/xaqjpzaa" 
               method="POST"
+              target="_self"
               className="space-y-5 bg-gray-50 p-8 rounded-lg border border-gray-200"
             >
               <div>
