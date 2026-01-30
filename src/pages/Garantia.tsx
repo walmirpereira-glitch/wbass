@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Shield, AlertTriangle, Phone } from "lucide-react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import garantiaHero from "@/assets/garantia-hero.jpg";
 
 const Garantia = () => {
@@ -98,12 +99,12 @@ const Garantia = () => {
                   <p className="text-gray-600 leading-relaxed">
                     Se sua caixa necessita de reparos, não hesite contatar a Wbass Cabinets.
                   </p>
-                  <a
-                    href="/#contact"
+                  <Link
+                    to="/contato"
                     className="inline-flex items-center gap-2 mt-4 text-primary font-semibold hover:underline"
                   >
                     Entre em contato conosco
-                  </a>
+                  </Link>
                 </div>
               </div>
 

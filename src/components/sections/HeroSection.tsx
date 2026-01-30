@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import heroInicio1 from "@/assets/hero-inicio1.jpg";
 import heroInicio2 from "@/assets/hero-inicio2.jpg";
 import heroVideo from "@/assets/hero-video.mp4";
@@ -169,15 +170,15 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <a href="#products">
+            <Link to="/produtos">
               <Button 
                 size="xl" 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8"
               >
                 Ver Produtos
               </Button>
-            </a>
-            <a href="#about">
+            </Link>
+            <Link to="/sobre">
               <Button 
                 variant="outline" 
                 size="xl"
@@ -185,7 +186,7 @@ export function HeroSection() {
               >
                 Saiba Mais
               </Button>
-            </a>
+            </Link>
           </motion.div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { forwardRef } from "react";
 import { Instagram, Facebook } from "lucide-react";
+import { Link } from "react-router-dom";
 import wbassLogo from "@/assets/wbass-logo-new.jpg";
 
 const WhatsAppIcon = () => (
@@ -13,6 +14,15 @@ const socialLinks = [
   { Icon: WhatsAppIcon, href: "https://wa.me/5512974081582", label: "WhatsApp" },
   { Icon: Facebook, href: "https://www.facebook.com/wbass.cabinets.2025", label: "Facebook" },
   { Icon: Instagram, href: "https://www.instagram.com/wbass_cabinets/", label: "Instagram" },
+];
+
+const navLinks = [
+  { label: "Início", to: "/" },
+  { label: "Sobre", to: "/sobre" },
+  { label: "Produtos", to: "/produtos" },
+  { label: "Garantia", to: "/garantia" },
+  { label: "Nossos Projetos", to: "/nossos-projetos" },
+  { label: "Contato", to: "/contato" },
 ];
 
 export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
@@ -29,9 +39,9 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
             transition={{ duration: 0.6 }}
             className="flex items-center gap-4"
           >
-            <a href="#hero" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <img src={wbassLogo} alt="Wbass Cabinets" className="h-10 w-auto" />
-            </a>
+            </Link>
             <div className="flex items-center gap-3">
               {socialLinks.map((link) => (
                 <a
@@ -50,30 +60,14 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
 
           {/* Navigation */}
           <nav className="flex items-center gap-8">
-            {[
-              { label: "Início", href: "#hero" },
-              { label: "Sobre", href: "#about" },
-              { label: "Produtos", href: "#products" },
-              { label: "Garantia", href: "/garantia", isRoute: true },
-              { label: "Contato", href: "#contact" },
-            ].map((item) => (
-              item.isRoute ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-primary transition-colors duration-300 font-medium"
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-primary transition-colors duration-300 font-medium"
-                >
-                  {item.label}
-                </a>
-              )
+            {navLinks.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-primary transition-colors duration-300 font-medium"
+              >
+                {item.label}
+              </Link>
             ))}
           </nav>
 
