@@ -38,6 +38,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   useEffect(() => {
