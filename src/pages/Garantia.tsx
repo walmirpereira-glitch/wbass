@@ -2,16 +2,10 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import { Shield, AlertTriangle, Phone } from "lucide-react";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import garantiaHero from "@/assets/garantia-hero.jpg";
 
 const Garantia = () => {
-  // Scroll to top when page loads
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />

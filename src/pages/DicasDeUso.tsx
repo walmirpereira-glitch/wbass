@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -7,10 +6,6 @@ import dicasUso1 from "@/assets/dicas/dicas-uso-1.jpg";
 import dicasUso2 from "@/assets/dicas/dicas-uso-2.jpg";
 
 const DicasDeUso = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="min-h-screen bg-white">
       <Header />
