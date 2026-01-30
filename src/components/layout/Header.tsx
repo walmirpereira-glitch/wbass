@@ -1,7 +1,7 @@
 import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Instagram, Facebook } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import wbassLogo from "@/assets/wbass-logo-new.png";
 
 const WhatsAppIcon = () => (
@@ -30,11 +30,9 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
 
-  const handleNavClick = (link: typeof navLinks[0]) => {
-    navigate(link.anchor);
-    requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+  const handleLinkClick = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     setIsMobileMenuOpen(false);
   };
 
@@ -59,12 +57,13 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
         <nav className="flex items-center justify-between">
           {/* Logo + Social Icons + Nav */}
           <div className="flex items-center gap-6">
-            <button 
-              onClick={() => handleNavClick(navLinks[0])} 
+            <Link 
+              to="/"
+              onClick={handleLinkClick}
               className="flex items-center"
             >
               <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 md:h-14 w-auto" />
-            </button>
+            </Link>
             <div className="hidden sm:flex items-center gap-3">
               {socialLinks.map((link) => (
                 <a
@@ -84,13 +83,16 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <button
+              <Link
                 key={link.anchor}
-                onClick={() => handleNavClick(link)}
-                className="text-gray-700 hover:text-primary font-medium text-sm uppercase tracking-wider transition-colors"
+                to={link.anchor}
+                onClick={handleLinkClick}
+                className={`text-gray-700 hover:text-primary font-medium text-sm uppercase tracking-wider transition-colors ${
+                  location.pathname === link.anchor ? "text-primary" : ""
+                }`}
               >
                 {link.label}
-              </button>
+              </Link>
             ))}
             <Link
               to="/orcamento"
@@ -123,13 +125,16 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
           >
             <div className="flex flex-col py-4">
               {navLinks.map((link) => (
-                <button
+                <Link
                   key={link.anchor}
-                  onClick={() => handleNavClick(link)}
-                  className="px-6 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 font-medium text-sm uppercase tracking-wider transition-colors text-left"
+                  to={link.anchor}
+                  onClick={handleLinkClick}
+                  className={`block px-6 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 font-medium text-sm uppercase tracking-wider transition-colors ${
+                    location.pathname === link.anchor ? "text-primary bg-gray-50" : ""
+                  }`}
                 >
                   {link.label}
-                </button>
+                </Link>
               ))}
               <Link
                 to="/orcamento"
