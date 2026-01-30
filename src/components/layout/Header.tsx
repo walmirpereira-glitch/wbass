@@ -17,13 +17,13 @@ const socialLinks = [
 ];
 
 const navLinks = [
-  { label: "Início", anchor: "#hero" },
-  { label: "Sobre", anchor: "#about" },
-  { label: "Produtos", anchor: "#products" },
-  { label: "Vídeos", anchor: "#videos" },
+  { label: "Início", anchor: "/", isRoute: true },
+  { label: "Sobre", anchor: "/sobre", isRoute: true },
+  { label: "Produtos", anchor: "/produtos", isRoute: true },
+  { label: "Vídeos", anchor: "/videos", isRoute: true },
   { label: "Garantia", anchor: "/garantia", isRoute: true },
   { label: "Dicas de Uso", anchor: "/dicas-de-uso", isRoute: true },
-  { label: "Contato", anchor: "#contact" },
+  { label: "Contato", anchor: "/contato", isRoute: true },
 ];
 
 export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
@@ -33,28 +33,8 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
   const navigate = useNavigate();
 
   const handleNavClick = (link: typeof navLinks[0]) => {
-    if (link.isRoute) {
-      navigate(link.anchor);
-      // Ensure route changes always start at the top
-      requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
-      setIsMobileMenuOpen(false);
-      return;
-    }
-    
-    if (location.pathname !== "/") {
-      navigate("/");
-      setTimeout(() => {
-        const element = document.querySelector(link.anchor);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 100);
-    } else {
-      const element = document.querySelector(link.anchor);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
+    navigate(link.anchor);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
     setIsMobileMenuOpen(false);
   };
 
