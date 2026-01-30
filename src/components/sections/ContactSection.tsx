@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { MapPin, Phone, Mail, Instagram, Facebook } from "lucide-react";
+import { MapPin, Phone, Mail, Instagram, Facebook, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -282,6 +282,7 @@ export function ContactSection() {
                   className="w-full"
                   disabled={isSubmitting}
                 >
+                  <Send className="w-4 h-4 mr-2" />
                   {isSubmitting ? "Enviando..." : "Enviar Mensagem"}
                 </Button>
               </form>
