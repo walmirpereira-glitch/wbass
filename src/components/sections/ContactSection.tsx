@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { MapPin, Phone, Mail, Instagram, Facebook, Send } from "lucide-react";
+import { useRef, useState } from "react";
+import { MapPin, Phone, Mail, Instagram, Facebook, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 import contactShowcase from "@/assets/contact-showcase.jpg";
 
 const contactInfo = [
@@ -33,6 +34,64 @@ const socialLinks = [
 export function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('phone', formData.phone);
+    formDataToSend.append('message', formData.message);
+    formDataToSend.append('_subject', 'Nova mensagem de contato Wbass');
+
+    try {
+      const response = await fetch('https://formspree.io/f/xaqjpzaa', {
+        method: 'POST',
+        body: formDataToSend,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Mensagem enviada com sucesso!",
+          description: "Entraremos em contato em breve.",
+        });
+        // Limpar formulário
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+      } else {
+        throw new Error('Erro ao enviar');
+      }
+    } catch (error) {
+      toast({
+        title: "Erro ao enviar",
+        description: "Por favor, tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section
       id="contact"
@@ -131,9 +190,7 @@ export function ContactSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <form 
-              action="https://formspree.io/f/xaqjpzaa" 
-              method="POST"
-              target="_self"
+              onSubmit={handleSubmit}
               className="space-y-5 bg-gray-50 p-8 rounded-lg border border-gray-200"
             >
               <div>
@@ -143,6 +200,8 @@ export function ContactSection() {
                 <input 
                   type="text"
                   name="name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="Seu nome completo" 
                   required
                   className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
@@ -156,6 +215,8 @@ export function ContactSection() {
                 <input 
                   type="email"
                   name="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="seu@email.com" 
                   required
                   className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
@@ -169,6 +230,8 @@ export function ContactSection() {
                 <input 
                   type="tel"
                   name="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="(00) 00000-0000" 
                   required
                   className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
@@ -181,8 +244,11 @@ export function ContactSection() {
                 </label>
                 <textarea 
                   name="message"
+                  value={formData.message}
+                  onChange={(e) => handleInputChange("message", e.target.value)}
                   rows={5}
                   placeholder="Conte-nos sobre sua necessidade..."
+                  required
                   className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none resize-none text-gray-900 placeholder:text-gray-400"
                 />
               </div>
@@ -192,9 +258,19 @@ export function ContactSection() {
                 variant="wbassFilled"
                 size="lg"
                 className="w-full"
+                disabled={isSubmitting}
               >
-                <Send className="w-4 h-4 mr-2" />
-                Enviar Mensagem
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4 mr-2" />
+                    Enviar Mensagem
+                  </>
+                )}
               </Button>
             </form>
           </motion.div>

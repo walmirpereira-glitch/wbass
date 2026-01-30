@@ -4,7 +4,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
-import { Send, Plus, Minus, Crown, Zap, FileText } from "lucide-react";
+import { Send, Plus, Minus, Crown, Zap, FileText, Loader2 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -136,6 +137,78 @@ const Orcamento = () => {
     cidade: "",
     estado: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    if (cart.length === 0) {
+      toast({
+        title: "Atenção",
+        description: "Por favor, selecione pelo menos um produto.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const produtosTextoSubmit = cart.map((item) => 
+      `${item.product.name} (${item.product.line === 'premium' ? 'Premium' : 'Easy'}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+    ).join(' | ');
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('nome', formData.nome);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('cpf', formData.cpf);
+    formDataToSend.append('rua', formData.rua);
+    formDataToSend.append('numero', formData.numero);
+    formDataToSend.append('cep', formData.cep);
+    formDataToSend.append('cidade', formData.cidade);
+    formDataToSend.append('estado', formData.estado);
+    formDataToSend.append('produtos', produtosTextoSubmit);
+    formDataToSend.append('total', `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`);
+    formDataToSend.append('_subject', 'Novo Orçamento Wbass');
+
+    try {
+      const response = await fetch('https://formspree.io/f/xaqjpzaa', {
+        method: 'POST',
+        body: formDataToSend,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Orçamento enviado com sucesso!",
+          description: "Entraremos em contato em breve com sua proposta.",
+        });
+        // Limpar formulário e carrinho
+        setFormData({
+          nome: "",
+          email: "",
+          cpf: "",
+          rua: "",
+          numero: "",
+          cep: "",
+          cidade: "",
+          estado: "",
+        });
+        setCart([]);
+      } else {
+        throw new Error('Erro ao enviar');
+      }
+    } catch (error) {
+      toast({
+        title: "Erro ao enviar",
+        description: "Por favor, tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const toggleProduct = (product: Product, checked: boolean) => {
     if (checked) {
@@ -167,11 +240,6 @@ const Orcamento = () => {
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-
-  // Formatar lista de produtos para o campo hidden
-  const produtosTexto = cart.map((item) => 
-    `${item.product.name} (${item.product.line === 'premium' ? 'Premium' : 'Easy'}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-  ).join(' | ');
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -277,8 +345,8 @@ const Orcamento = () => {
               </p>
             </div>
 
-            {/* Formspree HTML puro (navega para a página de agradecimento do Formspree) */}
-            <form action="https://formspree.io/f/xaqjpzaa" method="POST" target="_self">
+            {/* Formulário com AJAX */}
+            <form onSubmit={handleSubmit}>
               {/* Client Form */}
               <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
                 <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
@@ -401,14 +469,6 @@ const Orcamento = () => {
                 </div>
               </div>
 
-              {/* Campos extras para o Formspree */}
-              <input type="hidden" name="produtos" value={produtosTexto} />
-              <input
-                type="hidden"
-                name="total"
-                value={`R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
-              />
-              <input type="hidden" name="_subject" value="Novo Orçamento Wbass" />
 
               {/* Products Selection - Premium */}
               <div className="bg-secondary/30 p-8 rounded-lg border border-primary/30 mb-6">
@@ -469,9 +529,19 @@ const Orcamento = () => {
                     variant="wbassFilled"
                     size="xl"
                     className="flex items-center gap-2"
+                    disabled={isSubmitting}
                   >
-                    <Send className="w-5 h-5" />
-                    Enviar Orçamento
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        Enviar Orçamento
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>
