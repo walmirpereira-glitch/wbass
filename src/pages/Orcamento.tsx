@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
 import { Send, Plus, Minus, Crown, Zap, FileText } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -126,23 +125,7 @@ interface CartItem {
 }
 
 const Orcamento = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    nomeCompleto: "",
-    email: "",
-    cpf: "",
-    rua: "",
-    numero: "",
-    cep: "",
-    cidade: "",
-    estado: "",
-  });
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const toggleProduct = (product: Product, checked: boolean) => {
     if (checked) {
@@ -175,84 +158,10 @@ const Orcamento = () => {
     0
   );
 
-  const handleSubmit = async () => {
-    if (!formData.nomeCompleto || !formData.email || !formData.cpf || !formData.rua || !formData.numero || !formData.cep || !formData.cidade || !formData.estado) {
-      toast({
-        title: "Campos obrigatórios",
-        description: "Por favor, preencha todos os dados.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (cart.length === 0) {
-      toast({
-        title: "Nenhum produto selecionado",
-        description: "Selecione pelo menos um produto para o orçamento.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const endereco = `${formData.rua}, ${formData.numero} - CEP ${formData.cep}`;
-      
-      // Formatar lista de produtos para o email
-      const produtosTexto = cart.map((item) => 
-        `${item.product.name} (${item.product.line === 'premium' ? 'Premium' : 'Easy'}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-      ).join('\n');
-
-      const response = await fetch("https://formspree.io/f/xaqjpzaa", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.nomeCompleto,
-          email: formData.email,
-          cpf: formData.cpf,
-          endereco: endereco,
-          cidade: formData.cidade,
-          estado: formData.estado,
-          produtos: produtosTexto,
-          total: `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-          _subject: `Novo Orçamento - ${formData.nomeCompleto}`,
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to send");
-
-      toast({
-        title: "Orçamento enviado!",
-        description: "Entraremos em contato em breve com a proposta oficial.",
-      });
-
-      // Reset form
-      setFormData({
-        nomeCompleto: "",
-        email: "",
-        cpf: "",
-        rua: "",
-        numero: "",
-        cep: "",
-        cidade: "",
-        estado: "",
-      });
-      setCart([]);
-    } catch (error) {
-      console.error("Error:", error);
-      toast({
-        title: "Erro ao enviar",
-        description: "Tente novamente ou entre em contato pelo WhatsApp.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // Formatar lista de produtos para o campo hidden
+  const produtosTexto = cart.map((item) => 
+    `${item.product.name} (${item.product.line === 'premium' ? 'Premium' : 'Easy'}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+  ).join(' | ');
 
   const renderProductCard = (product: Product) => {
     const isPremium = product.line === "premium";
@@ -306,6 +215,7 @@ const Orcamento = () => {
         {isInCart(product.id) && (
           <div className="flex items-center gap-2 shrink-0">
             <button
+              type="button"
               onClick={() => updateQuantity(product.id, -1)}
               className="w-8 h-8 rounded border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
             >
@@ -315,6 +225,7 @@ const Orcamento = () => {
               {getQuantity(product.id)}
             </span>
             <button
+              type="button"
               onClick={() => updateQuantity(product.id, 1)}
               className="w-8 h-8 rounded border border-border flex items-center justify-center hover:border-primary hover:text-primary transition-colors"
             >
@@ -352,186 +263,188 @@ const Orcamento = () => {
               </p>
             </div>
 
-            {/* Client Form */}
-            <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
-              <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-primary" />
-                Seus Dados
-              </h2>
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Nome Completo *
-                  </label>
-                  <input
-                    type="text"
-                    name="nomeCompleto"
-                    value={formData.nomeCompleto}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="Seu nome completo"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    E-mail *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="seu@email.com"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    CPF para Transportadora *
-                  </label>
-                  <input
-                    type="text"
-                    name="cpf"
-                    value={formData.cpf}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="000.000.000-00"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Rua *
-                  </label>
-                  <input
-                    type="text"
-                    name="rua"
-                    value={formData.rua}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="Nome da rua"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Número *
-                  </label>
-                  <input
-                    type="text"
-                    name="numero"
-                    value={formData.numero}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="123"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    CEP *
-                  </label>
-                  <input
-                    type="text"
-                    name="cep"
-                    value={formData.cep}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="00000-000"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Cidade *
-                  </label>
-                  <input
-                    type="text"
-                    name="cidade"
-                    value={formData.cidade}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="Sua cidade"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
-                    Estado *
-                  </label>
-                  <input
-                    type="text"
-                    name="estado"
-                    value={formData.estado}
-                    onChange={handleInputChange}
-                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
-                    placeholder="SP"
-                  />
-                </div>
-              </div>
-            </div>
+            {/* FORM HTML PURO - SEM JAVASCRIPT */}
+            <form 
+              action="https://formspree.io/f/xaqjpzaa" 
+              method="POST"
+            >
+              {/* Campo hidden para produtos selecionados */}
+              <input type="hidden" name="produtos" value={produtosTexto} />
+              <input type="hidden" name="total" value={`R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} />
+              <input type="hidden" name="_subject" value="Novo Orçamento Wbass" />
 
-            {/* Products Selection - Premium */}
-            <div className="bg-secondary/30 p-8 rounded-lg border border-primary/30 mb-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Crown className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">
-                    Linha Premium
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Falantes Italianos em neodímio • Ultra leve • Som moderno
-                  </p>
+              {/* Client Form */}
+              <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
+                <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-primary" />
+                  Seus Dados
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      Nome Completo *
+                    </label>
+                    <input
+                      type="text"
+                      name="nome"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="Seu nome completo"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      E-mail *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="seu@email.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      CPF para Transportadora *
+                    </label>
+                    <input
+                      type="text"
+                      name="cpf"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="000.000.000-00"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      Rua *
+                    </label>
+                    <input
+                      type="text"
+                      name="rua"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="Nome da rua"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      Número *
+                    </label>
+                    <input
+                      type="text"
+                      name="numero"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="123"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      CEP *
+                    </label>
+                    <input
+                      type="text"
+                      name="cep"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="00000-000"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      Cidade *
+                    </label>
+                    <input
+                      type="text"
+                      name="cidade"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="Sua cidade"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      Estado *
+                    </label>
+                    <input
+                      type="text"
+                      name="estado"
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      placeholder="SP"
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="space-y-3">
-                {premiumProducts.map(renderProductCard)}
-              </div>
-            </div>
 
-            {/* Products Selection - Easy */}
-            <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-secondary rounded-lg">
-                  <Zap className="w-5 h-5 text-muted-foreground" />
+              {/* Products Selection - Premium */}
+              <div className="bg-secondary/30 p-8 rounded-lg border border-primary/30 mb-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Crown className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground">
+                      Linha Premium
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Falantes Italianos em neodímio • Ultra leve • Som moderno
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">
-                    Linha Easy
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Falantes nacionais em ferrite • Custo-benefício • Som vintage
-                  </p>
+                <div className="space-y-3">
+                  {premiumProducts.map(renderProductCard)}
                 </div>
               </div>
-              <div className="space-y-3">
-                {easyProducts.map(renderProductCard)}
-              </div>
-            </div>
 
-            {/* Summary and Submit */}
-            <div className="bg-charcoal p-8 rounded-lg border border-border">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div>
-                  <p className="text-muted-foreground text-sm mb-1">
-                    {cart.length} produto(s) selecionado(s)
-                  </p>
-                  <p className="text-2xl font-bold text-foreground">
-                    Total:{" "}
-                    <span className="text-primary">
-                      R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                    </span>
-                  </p>
+              {/* Products Selection - Easy */}
+              <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-secondary rounded-lg">
+                    <Zap className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground">
+                      Linha Easy
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Falantes nacionais em ferrite • Custo-benefício • Som vintage
+                    </p>
+                  </div>
                 </div>
-                <Button
-                  variant="wbassFilled"
-                  size="xl"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="flex items-center gap-2"
-                >
-                  <Send className="w-5 h-5" />
-                  {isSubmitting ? "Enviando..." : "Enviar Orçamento"}
-                </Button>
+                <div className="space-y-3">
+                  {easyProducts.map(renderProductCard)}
+                </div>
               </div>
-            </div>
+
+              {/* Summary and Submit */}
+              <div className="bg-charcoal p-8 rounded-lg border border-border">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                  <div>
+                    <p className="text-muted-foreground text-sm mb-1">
+                      {cart.length} produto(s) selecionado(s)
+                    </p>
+                    <p className="text-2xl font-bold text-foreground">
+                      Total:{" "}
+                      <span className="text-primary">
+                        R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                      </span>
+                    </p>
+                  </div>
+                  <Button
+                    type="submit"
+                    variant="wbassFilled"
+                    size="xl"
+                    className="flex items-center gap-2"
+                  >
+                    <Send className="w-5 h-5" />
+                    Enviar Orçamento
+                  </Button>
+                </div>
+              </div>
+            </form>
           </motion.div>
         </div>
       </main>
