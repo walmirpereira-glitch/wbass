@@ -1,15 +1,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { MapPin, Phone, Mail, Instagram, Facebook, Send } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import contactShowcase from "@/assets/contact-showcase.jpg";
 
 const contactInfo = [
@@ -37,62 +30,9 @@ const socialLinks = [
   { icon: Facebook, href: "https://www.facebook.com/wbass.cabinets.2025", label: "Facebook" },
 ];
 
-const formSchema = z.object({
-  name: z.string().trim().min(1, "Nome completo é obrigatório").max(100, "Nome deve ter no máximo 100 caracteres"),
-  email: z.string().trim().email("Email inválido").max(255, "Email deve ter no máximo 255 caracteres"),
-  phone: z.string().trim().min(1, "Telefone é obrigatório").max(20, "Telefone inválido"),
-  message: z.string().trim().max(1000, "Mensagem deve ter no máximo 1000 caracteres").optional(),
-});
-
-type FormData = z.infer<typeof formSchema>;
-
 export function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    },
-  });
-
-  const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("https://formspree.io/f/xaqjpzaa", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) throw new Error("Failed to send");
-
-      toast({
-        title: "Mensagem enviada!",
-        description: "Entraremos em contato em breve.",
-      });
-      form.reset();
-    } catch (error) {
-      console.error("Error:", error);
-      toast({
-        title: "Erro ao enviar",
-        description: "Tente novamente ou entre em contato pelo WhatsApp.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <section
       id="contact"
@@ -190,103 +130,72 @@ export function ContactSection() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 bg-gray-50 p-8 rounded-lg border border-gray-200">
-                <FormField
-                  control={form.control}
+            <form 
+              action="https://formspree.io/f/xaqjpzaa" 
+              method="POST"
+              className="space-y-5 bg-gray-50 p-8 rounded-lg border border-gray-200"
+            >
+              <div>
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                  Nome Completo
+                </label>
+                <input 
+                  type="text"
                   name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                        Nome Completo
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Seu nome completo" 
-                          className="bg-white border-gray-200 focus:border-primary text-gray-900 placeholder:text-gray-400"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="Seu nome completo" 
+                  required
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
                 />
+              </div>
 
-                <FormField
-                  control={form.control}
+              <div>
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                  Email
+                </label>
+                <input 
+                  type="email"
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                        Email
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="email"
-                          placeholder="seu@email.com" 
-                          className="bg-white border-gray-200 focus:border-primary text-gray-900 placeholder:text-gray-400"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="seu@email.com" 
+                  required
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
                 />
+              </div>
 
-                <FormField
-                  control={form.control}
+              <div>
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                  Telefone
+                </label>
+                <input 
+                  type="tel"
                   name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                        Telefone
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="tel"
-                          placeholder="(00) 00000-0000" 
-                          className="bg-white border-gray-200 focus:border-primary text-gray-900 placeholder:text-gray-400"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  placeholder="(00) 00000-0000" 
+                  required
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
                 />
+              </div>
 
-                <FormField
-                  control={form.control}
+              <div>
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                  Mensagem
+                </label>
+                <textarea 
                   name="message"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium">
-                        Mensagem
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          rows={5}
-                          placeholder="Conte-nos sobre sua necessidade..."
-                          className="bg-white border-gray-200 focus:border-primary resize-none text-gray-900 placeholder:text-gray-400"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  rows={5}
+                  placeholder="Conte-nos sobre sua necessidade..."
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none resize-none text-gray-900 placeholder:text-gray-400"
                 />
+              </div>
 
-                <Button 
-                  type="submit"
-                  variant="wbassFilled"
-                  size="lg"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  {isSubmitting ? "Enviando..." : "Enviar Mensagem"}
-                </Button>
-              </form>
-            </Form>
+              <Button 
+                type="submit"
+                variant="wbassFilled"
+                size="lg"
+                className="w-full"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Enviar Mensagem
+              </Button>
+            </form>
           </motion.div>
         </div>
       </div>
