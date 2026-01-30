@@ -11,7 +11,6 @@ import Contato from "./pages/Contato.tsx";
 import Orcamento from "./pages/Orcamento.tsx";
 import Garantia from "./pages/Garantia.tsx";
 import DicasDeUso from "./pages/DicasDeUso.tsx";
-import NossosProjetos from "./pages/NossosProjetos.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -30,7 +29,6 @@ const App = () => (
         <Route path="/orcamento" element={<Orcamento />} />
         <Route path="/garantia" element={<Garantia />} />
         <Route path="/dicas-de-uso" element={<DicasDeUso />} />
-        <Route path="/nossos-projetos" element={<NossosProjetos />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
