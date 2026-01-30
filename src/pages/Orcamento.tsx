@@ -6,7 +6,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
 import { Send, Plus, Minus, Crown, Zap, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
   id: string;
@@ -199,25 +198,32 @@ const Orcamento = () => {
 
     try {
       const endereco = `${formData.rua}, ${formData.numero} - CEP ${formData.cep}`;
-      const { error } = await supabase.functions.invoke("send-orcamento-email", {
-        body: {
-          nomeCompleto: formData.nomeCompleto,
+      
+      // Formatar lista de produtos para o email
+      const produtosTexto = cart.map((item) => 
+        `${item.product.name} (${item.product.line === 'premium' ? 'Premium' : 'Easy'}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+      ).join('\n');
+
+      const response = await fetch("https://formspree.io/f/xaqjpzaa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.nomeCompleto,
           email: formData.email,
           cpf: formData.cpf,
-          endereco,
+          endereco: endereco,
           cidade: formData.cidade,
           estado: formData.estado,
-          produtos: cart.map((item) => ({
-            name: item.product.name,
-            quantity: item.quantity,
-            price: item.product.price,
-            line: item.product.line,
-          })),
-          total,
-        },
+          produtos: produtosTexto,
+          total: `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+          _subject: `Novo Orçamento - ${formData.nomeCompleto}`,
+        }),
       });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error("Failed to send");
 
       toast({
         title: "Orçamento enviado!",
