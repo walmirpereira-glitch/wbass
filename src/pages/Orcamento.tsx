@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
 import { Send, Plus, Minus, Crown, Zap, FileText } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Product {
   id: string;
@@ -125,7 +126,19 @@ interface CartItem {
 }
 
 const Orcamento = () => {
+  const { toast } = useToast();
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    cpf: "",
+    rua: "",
+    numero: "",
+    cep: "",
+    cidade: "",
+    estado: "",
+  });
 
   const toggleProduct = (product: Product, checked: boolean) => {
     if (checked) {
@@ -162,6 +175,77 @@ const Orcamento = () => {
   const produtosTexto = cart.map((item) => 
     `${item.product.name} (${item.product.line === 'premium' ? 'Premium' : 'Easy'}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
   ).join(' | ');
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    if (cart.length === 0) {
+      toast({
+        title: "Selecione ao menos um produto",
+        description: "Por favor, escolha os produtos desejados antes de enviar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const submitData = new FormData();
+    submitData.append("nome", formData.nome);
+    submitData.append("email", formData.email);
+    submitData.append("cpf", formData.cpf);
+    submitData.append("rua", formData.rua);
+    submitData.append("numero", formData.numero);
+    submitData.append("cep", formData.cep);
+    submitData.append("cidade", formData.cidade);
+    submitData.append("estado", formData.estado);
+    submitData.append("produtos", produtosTexto);
+    submitData.append("total", `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
+    submitData.append("_subject", "Novo Orçamento Wbass");
+
+    try {
+      const response = await fetch("https://formspree.io/f/xaqjpzaa", {
+        method: "POST",
+        body: submitData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Orçamento enviado com sucesso!",
+          description: "Entraremos em contato em breve com sua proposta.",
+        });
+        // Limpar formulário
+        setCart([]);
+        setFormData({
+          nome: "",
+          email: "",
+          cpf: "",
+          rua: "",
+          numero: "",
+          cep: "",
+          cidade: "",
+          estado: "",
+        });
+      } else {
+        throw new Error("Erro ao enviar");
+      }
+    } catch (error) {
+      toast({
+        title: "Erro ao enviar orçamento",
+        description: "Por favor, tente novamente ou entre em contato por telefone.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const renderProductCard = (product: Product) => {
     const isPremium = product.line === "premium";
@@ -263,16 +347,8 @@ const Orcamento = () => {
               </p>
             </div>
 
-            {/* FORM HTML PURO - SEM JAVASCRIPT */}
-            <form 
-              action="https://formspree.io/f/xaqjpzaa" 
-              method="POST"
-            >
-              {/* Campo hidden para produtos selecionados */}
-              <input type="hidden" name="produtos" value={produtosTexto} />
-              <input type="hidden" name="total" value={`R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`} />
-              <input type="hidden" name="_subject" value="Novo Orçamento Wbass" />
-
+            {/* FORM COM FETCH - SEM RECARREGAR PÁGINA */}
+            <form onSubmit={handleSubmit}>
               {/* Client Form */}
               <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
                 <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
@@ -286,9 +362,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="text"
-                      name="nome"
+                      value={formData.nome}
+                      onChange={(e) => handleInputChange("nome", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="Seu nome completo"
                     />
                   </div>
@@ -298,9 +375,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="email"
-                      name="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange("email", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="seu@email.com"
                     />
                   </div>
@@ -310,9 +388,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="text"
-                      name="cpf"
+                      value={formData.cpf}
+                      onChange={(e) => handleInputChange("cpf", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="000.000.000-00"
                     />
                   </div>
@@ -322,9 +401,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="text"
-                      name="rua"
+                      value={formData.rua}
+                      onChange={(e) => handleInputChange("rua", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="Nome da rua"
                     />
                   </div>
@@ -334,9 +414,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="text"
-                      name="numero"
+                      value={formData.numero}
+                      onChange={(e) => handleInputChange("numero", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="123"
                     />
                   </div>
@@ -346,9 +427,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="text"
-                      name="cep"
+                      value={formData.cep}
+                      onChange={(e) => handleInputChange("cep", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="00000-000"
                     />
                   </div>
@@ -358,9 +440,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="text"
-                      name="cidade"
+                      value={formData.cidade}
+                      onChange={(e) => handleInputChange("cidade", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="Sua cidade"
                     />
                   </div>
@@ -370,9 +453,10 @@ const Orcamento = () => {
                     </label>
                     <input
                       type="text"
-                      name="estado"
+                      value={formData.estado}
+                      onChange={(e) => handleInputChange("estado", e.target.value)}
                       required
-                      className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-gray-400"
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="SP"
                     />
                   </div>
@@ -438,9 +522,10 @@ const Orcamento = () => {
                     variant="wbassFilled"
                     size="xl"
                     className="flex items-center gap-2"
+                    disabled={isSubmitting}
                   >
                     <Send className="w-5 h-5" />
-                    Enviar Orçamento
+                    {isSubmitting ? "Enviando..." : "Enviar Orçamento"}
                   </Button>
                 </div>
               </div>
