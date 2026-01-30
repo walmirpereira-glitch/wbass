@@ -1,3 +1,8 @@
+/**
+ * Header Component - Navegação principal com react-router-dom
+ * Rotas: /, /sobre, /produtos, /videos, /garantia, /dicas-de-uso, /contato
+ * Última atualização: Rotas semânticas implementadas
+ */
 import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Instagram, Facebook } from "lucide-react";
