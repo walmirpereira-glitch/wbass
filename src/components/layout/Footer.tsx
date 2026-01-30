@@ -21,7 +21,6 @@ const navLinks = [
   { label: "Sobre", to: "/sobre" },
   { label: "Produtos", to: "/produtos" },
   { label: "Garantia", to: "/garantia" },
-  { label: "Nossos Projetos", to: "/nossos-projetos" },
   { label: "Contato", to: "/contato" },
 ];
 

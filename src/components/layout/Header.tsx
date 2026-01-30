@@ -28,7 +28,6 @@ const navLinks = [
   { label: "Vídeos", anchor: "/videos", isRoute: true },
   { label: "Garantia", anchor: "/garantia", isRoute: true },
   { label: "Dicas de Uso", anchor: "/dicas-de-uso", isRoute: true },
-  { label: "Nossos Projetos", anchor: "/nossos-projetos", isRoute: true },
   { label: "Contato", anchor: "/contato", isRoute: true },
 ];
 
