@@ -69,6 +69,14 @@ import img112ndLateral from "@/assets/products/112nd-lateral.png";
 
 // Product images - 115D
 import img115dFrente from "@/assets/products/115d-frente.jpg";
+
+// Product images - 115ND
+import img115ndFrente from "@/assets/products/115nd-frente.jpg";
+import img115ndLateral from "@/assets/products/115nd-lateral.jpg";
+
+// Product images - 410DP additional
+import img410dpFrente3 from "@/assets/products/410dp-frente3.jpg";
+
 import imgEasy1x12ndFrente from "@/assets/products/easy-1x12nd-frente.jpg";
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
 const product210dGallery = [img210dFrente2, img210dLateral3];
@@ -76,11 +84,12 @@ const product210dpGallery = [img210dFrente, img210dLateral1, img210dLateral2, im
 const productEasy2x10dGallery = [imgEasy2x10dFrente, imgEasy2x10dLateral1, imgEasy2x10dLateral2, imgEasy2x10dCima, imgEasy2x10dTraseira];
 const productEasy1x10dGallery = [imgEasy1x10dFrente, imgEasy1x10dLateral1, imgEasy1x10dLateral2, imgEasy1x10dCima, imgEasy1x10dTraseira];
 const productEasy1x12dGallery = [imgEasy1x12dFrente, imgEasy1x12dLateral1, imgEasy1x12dLateral2, imgEasy1x12dCima, imgEasy1x12dTraseira];
-const product410dpGallery = [img410dpFrente, img410dpLateral];
+const product410dpGallery = [img410dpFrente3, img410dpFrente, img410dpLateral];
 const product112dGallery = [img112dFrente, img112dLateral1, img112dLateral2, img112dCima, img112dTraseira];
 const product112ndGallery = [img112ndFrente, img112ndLateral, img112ndTraseira];
 const productEasy1x12ndGallery = [imgEasy1x12ndFrente];
 const product115dGallery = [img115dFrente];
+const product115ndGallery = [img115ndFrente, img115ndLateral];
 
 const premiumProducts: Product[] = [
   {
@@ -160,6 +169,8 @@ const premiumProducts: Product[] = [
     description: "1 falante Italiano em neodímio de 15\", não possui driver",
     specs: "400W RMS | 8 ohms",
     price: 4590.96,
+    image: img115ndFrente,
+    gallery: product115ndGallery,
   },
 ];
 
