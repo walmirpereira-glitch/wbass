@@ -20,7 +20,8 @@ const Garantia = () => {
         transition={{ duration: 0.5, ease: "easeInOut" }}
         className="min-h-screen bg-gray-50"
       >
-      <main className="pt-24 pb-16">
+        <Header />
+        <main className="pt-24 pb-16">
         <div className="container mx-auto px-6 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
