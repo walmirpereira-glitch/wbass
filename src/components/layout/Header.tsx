@@ -103,7 +103,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
               to="/orcamento"
               className="bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-2.5 rounded transition-colors"
             >
-              Orçamento
+              Proposta
             </Link>
           </div>
 
@@ -146,7 +146,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="mx-6 mt-3 bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-3 rounded text-center transition-colors"
               >
-                Orçamento
+                Proposta
               </Link>
             </div>
           </motion.div>

@@ -115,7 +115,7 @@ export function ContactSection() {
             </h2>
             <div className="w-16 h-1 bg-primary mb-8" />
             <p className="text-gray-600 text-lg leading-relaxed mb-10">
-              Não encontrou o modelo ideal ou ficou com alguma dúvida técnica? Nossa equipe está à disposição para ajudar você a escolher o cabinet perfeito para o seu som. Entre em contato agora para tirar dúvidas ou solicitar um orçamento personalizado.
+              Não encontrou o modelo ideal ou ficou com alguma dúvida técnica? Nossa equipe está à disposição para ajudar você a escolher o cabinet perfeito para o seu som. Entre em contato agora para tirar dúvidas ou solicitar uma proposta personalizada.
             </p>
 
             {/* Contact Details */}

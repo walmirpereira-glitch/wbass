@@ -171,7 +171,7 @@ const Orcamento = () => {
     formDataToSend.append('estado', formData.estado);
     formDataToSend.append('produtos', produtosTextoSubmit);
     formDataToSend.append('total', `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`);
-    formDataToSend.append('_subject', 'Novo Orçamento Wbass');
+    formDataToSend.append('_subject', 'Nova Proposta Wbass');
 
     try {
       const response = await fetch('https://formspree.io/f/xaqjpzaa', {
@@ -184,7 +184,7 @@ const Orcamento = () => {
 
       if (response.ok) {
         toast({
-          title: "Orçamento enviado com sucesso!",
+          title: "Proposta enviada com sucesso!",
           description: "Entraremos em contato em breve com sua proposta.",
         });
         // Limpar formulário e carrinho
@@ -342,11 +342,11 @@ const Orcamento = () => {
           >
             <div className="text-center mb-12">
               <span className="text-primary text-sm uppercase tracking-[0.3em] mb-4 block font-semibold">
-                Solicite seu orçamento
+                Solicite sua proposta
               </span>
               <h1 className="font-display text-4xl md:text-5xl text-foreground mb-4 tracking-wide">
-                MONTE SEU
-                <span className="text-gradient-green block">ORÇAMENTO</span>
+                MONTE SUA
+                <span className="text-gradient-green block">PROPOSTA</span>
               </h1>
               <div className="divider-green mx-auto mb-6" />
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -549,7 +549,7 @@ const Orcamento = () => {
                     ) : (
                       <>
                         <Send className="w-5 h-5" />
-                        Enviar Orçamento
+                        Enviar Proposta
                       </>
                     )}
                   </Button>
