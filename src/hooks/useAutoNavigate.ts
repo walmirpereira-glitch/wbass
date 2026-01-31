@@ -42,7 +42,7 @@ export const useAutoNavigate = (footerRef: React.RefObject<HTMLElement>) => {
               navigate(nextPage);
               setIsFadingOut(false);
             }, 500); // Fade duration
-          }, 1000); // 1 second delay
+          }, 500); // 500ms delay
         } else {
           // Cancel timer if user scrolls away
           if (timerRef.current) {
