@@ -50,7 +50,8 @@ import imgEasy1x12dCima from "@/assets/products/easy-1x12d-cima.jpg";
 import imgEasy1x12dTraseira from "@/assets/products/easy-1x12d-traseira.jpg";
 
 // Product images - 410DP
-import img410dpFrente from "@/assets/products/410dp-frente.png";
+import img410dpFrente from "@/assets/products/410dp-frente2.jpg";
+import img410dpLateral from "@/assets/products/410dp-lateral.jpg";
 
 // Product images - 112D
 import img112dFrente from "@/assets/products/112d-frente2.jpg";
@@ -68,7 +69,7 @@ const product210dGallery = [img210dFrente, img210dLateral1, img210dLateral2, img
 const productEasy2x10dGallery = [imgEasy2x10dFrente, imgEasy2x10dLateral1, imgEasy2x10dLateral2, imgEasy2x10dCima, imgEasy2x10dTraseira];
 const productEasy1x10dGallery = [imgEasy1x10dFrente, imgEasy1x10dLateral1, imgEasy1x10dLateral2, imgEasy1x10dCima, imgEasy1x10dTraseira];
 const productEasy1x12dGallery = [imgEasy1x12dFrente, imgEasy1x12dLateral1, imgEasy1x12dLateral2, imgEasy1x12dCima, imgEasy1x12dTraseira];
-const product410dpGallery = [img410dpFrente];
+const product410dpGallery = [img410dpFrente, img410dpLateral];
 const product112dGallery = [img112dFrente, img112dLateral1, img112dLateral2, img112dCima, img112dTraseira];
 const product112ndGallery = [img112ndFrente, img112ndLateral, img112ndTraseira];
 
