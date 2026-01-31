@@ -96,51 +96,51 @@ export function ContactSection() {
     <section
       id="contact"
       ref={ref}
-      className="py-24 lg:py-32 bg-white relative overflow-hidden"
+      className="py-28 lg:py-36 bg-white relative overflow-hidden"
     >
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+      <div className="container mx-auto px-8 lg:px-16">
+        <div className="grid lg:grid-cols-2 gap-20 lg:gap-28">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
           >
-            <span className="text-primary text-sm uppercase tracking-[0.3em] mb-4 block font-semibold">
+            <span className="text-primary text-sm uppercase tracking-[0.3em] mb-5 block font-semibold">
               Fale Conosco
             </span>
-            <h2 className="font-display text-4xl md:text-5xl text-gray-900 mb-8 tracking-wide">
+            <h2 className="font-display text-4xl md:text-5xl text-gray-900 mb-10 font-bold">
               ENTRE EM
               <span className="text-primary block">CONTATO</span>
             </h2>
-            <div className="w-16 h-1 bg-primary mb-8" />
-            <p className="text-gray-600 text-lg leading-relaxed mb-10">
+            <div className="w-20 h-1 bg-primary mb-10 rounded-full" />
+            <p className="text-gray-600 text-lg leading-relaxed mb-12">
               Não encontrou o modelo ideal ou ficou com alguma dúvida técnica? Nossa equipe está à disposição para ajudar você a escolher o cabinet perfeito para o seu som. Entre em contato agora para tirar dúvidas ou solicitar uma proposta personalizada.
             </p>
 
             {/* Contact Details */}
-            <div className="space-y-6 mb-10">
+            <div className="space-y-7 mb-12">
               {contactInfo.map((item, index) => (
                 <motion.div
                   key={item.label}
                   initial={{ opacity: 0, x: -20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  className="flex items-start gap-4"
+                  className="flex items-start gap-5"
                 >
-                  <div className="w-12 h-12 border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0 bg-gray-50">
-                    <item.icon className="w-5 h-5 text-primary" />
+                  <div className="w-14 h-14 border border-gray-200 rounded-xl flex items-center justify-center flex-shrink-0 bg-gray-50 shadow-sm">
+                    <item.icon className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <span className="text-xs uppercase tracking-[0.15em] text-gray-500 block mb-1">
+                    <span className="text-xs uppercase tracking-[0.15em] text-gray-500 block mb-1.5">
                       {item.label}
                     </span>
                     {item.href ? (
-                      <a href={item.href} className="text-gray-900 font-medium hover:text-primary transition-colors">
+                      <a href={item.href} className="text-gray-900 font-semibold hover:text-primary transition-colors">
                         {item.value}
                       </a>
                     ) : (
-                      <span className="text-gray-900 font-medium">{item.value}</span>
+                      <span className="text-gray-900 font-semibold">{item.value}</span>
                     )}
                   </div>
                 </motion.div>
@@ -148,8 +148,8 @@ export function ContactSection() {
             </div>
 
             {/* Social Links */}
-            <div className="mb-10">
-              <span className="text-xs uppercase tracking-[0.15em] text-gray-500 block mb-4">
+            <div className="mb-12">
+              <span className="text-xs uppercase tracking-[0.15em] text-gray-500 block mb-5">
                 Siga-nos
               </span>
               <div className="flex gap-4">
@@ -160,9 +160,9 @@ export function ContactSection() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={link.label}
-                    className="w-12 h-12 border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all duration-300"
+                    className="w-14 h-14 border border-gray-200 rounded-xl flex items-center justify-center text-gray-500 hover:text-primary hover:border-primary hover:bg-primary/5 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105"
                   >
-                    <link.icon className="w-5 h-5" />
+                    <link.icon className="w-6 h-6" />
                   </a>
                 ))}
               </div>
@@ -173,7 +173,7 @@ export function ContactSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="rounded-lg overflow-hidden shadow-lg"
+              className="rounded-2xl overflow-hidden shadow-xl"
             >
               <img 
                 src={contactShowcase} 
@@ -191,10 +191,10 @@ export function ContactSection() {
           >
             <form 
               onSubmit={handleSubmit}
-              className="space-y-5 bg-gray-50 p-8 rounded-lg border border-gray-200"
+              className="space-y-6 bg-gray-50 p-10 rounded-2xl border border-gray-200 shadow-lg"
             >
               <div>
-                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-semibold block mb-3">
                   Nome Completo
                 </label>
                 <input 
@@ -204,12 +204,12 @@ export function ContactSection() {
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="Seu nome completo" 
                   required
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-semibold block mb-3">
                   Email
                 </label>
                 <input 
@@ -219,12 +219,12 @@ export function ContactSection() {
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="seu@email.com" 
                   required
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-semibold block mb-3">
                   Telefone
                 </label>
                 <input 
@@ -234,12 +234,12 @@ export function ContactSection() {
                   onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="(00) 00000-0000" 
                   required
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:border-primary focus:outline-none text-gray-900 placeholder:text-gray-400 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-medium block mb-2">
+                <label className="text-xs uppercase tracking-[0.15em] text-gray-600 font-semibold block mb-3">
                   Mensagem
                 </label>
                 <textarea 
@@ -249,7 +249,7 @@ export function ContactSection() {
                   rows={5}
                   placeholder="Conte-nos sobre sua necessidade..."
                   required
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-md focus:border-primary focus:outline-none resize-none text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:border-primary focus:outline-none resize-none text-gray-900 placeholder:text-gray-400 transition-colors"
                 />
               </div>
 
@@ -257,7 +257,7 @@ export function ContactSection() {
                 type="submit"
                 variant="wbassFilled"
                 size="lg"
-                className="w-full"
+                className="w-full rounded-xl"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

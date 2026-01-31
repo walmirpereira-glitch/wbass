@@ -69,7 +69,7 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Bebas Neue', 'Impact', 'sans-serif'],
+        display: ['Montserrat', 'sans-serif'],
         body: ['Inter', '-apple-system', 'sans-serif'],
       },
       borderRadius: {

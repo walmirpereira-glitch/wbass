@@ -52,10 +52,10 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
   return (
     <header
       ref={ref}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-white shadow-md py-2"
-          : "bg-white py-4"
+          ? "glass shadow-lg py-2"
+          : "bg-white/95 backdrop-blur-sm py-4"
       }`}
     >
       <div className="container mx-auto px-6 lg:px-12">
@@ -101,7 +101,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
             ))}
             <Link
               to="/orcamento"
-              className="bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-2.5 rounded transition-colors"
+              className="btn-glow bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-2.5 rounded-lg transition-all duration-300"
             >
               Cotação
             </Link>
@@ -144,7 +144,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
               <Link
                 to="/orcamento"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="mx-6 mt-3 bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-3 rounded text-center transition-colors"
+                className="btn-glow mx-6 mt-3 bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-3 rounded-lg text-center transition-all duration-300"
               >
                 Cotação
               </Link>
