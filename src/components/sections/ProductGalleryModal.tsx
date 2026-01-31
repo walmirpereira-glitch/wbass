@@ -189,7 +189,7 @@ export function ProductGalleryModal({
               {/* CTA Button */}
               <Link to="/orcamento" className="block" onClick={onClose}>
                 <button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded transition-colors flex items-center justify-center gap-2">
-                  Solicitar Orçamento
+                  Solicitar Proposta
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>

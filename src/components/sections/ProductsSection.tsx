@@ -446,7 +446,7 @@ export function ProductsSection() {
         >
           <Link to="/orcamento">
             <button className="bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded transition-colors inline-flex items-center gap-2 group">
-              Solicitar Orçamento
+              Solicitar Proposta
               <ArrowRight
                 size={18}
                 className="group-hover:translate-x-1 transition-transform duration-300"
