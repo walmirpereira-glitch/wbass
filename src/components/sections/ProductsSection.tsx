@@ -67,7 +67,8 @@ import img112ndFrente from "@/assets/products/112nd-frente.png";
 import img112ndTraseira from "@/assets/products/112nd-traseira.png";
 import img112ndLateral from "@/assets/products/112nd-lateral.png";
 
-// Product images - Easy 1x12ND
+// Product images - 115D
+import img115dFrente from "@/assets/products/115d-frente.jpg";
 import imgEasy1x12ndFrente from "@/assets/products/easy-1x12nd-frente.jpg";
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
 const product210dGallery = [img210dFrente2, img210dLateral3];
@@ -79,6 +80,7 @@ const product410dpGallery = [img410dpFrente, img410dpLateral];
 const product112dGallery = [img112dFrente, img112dLateral1, img112dLateral2, img112dCima, img112dTraseira];
 const product112ndGallery = [img112ndFrente, img112ndLateral, img112ndTraseira];
 const productEasy1x12ndGallery = [imgEasy1x12ndFrente];
+const product115dGallery = [img115dFrente];
 
 const premiumProducts: Product[] = [
   {
@@ -148,6 +150,8 @@ const premiumProducts: Product[] = [
     description: "1 falante Italiano em neodímio de 15\" + driver com ajuste de volume 3 posições",
     specs: "400W RMS | 8 ohms",
     price: 5760.48,
+    image: img115dFrente,
+    gallery: product115dGallery,
   },
   {
     id: "115nd",
