@@ -67,7 +67,7 @@ import img112ndFrente from "@/assets/products/112nd-frente.png";
 import img112ndTraseira from "@/assets/products/112nd-traseira.png";
 import img112ndLateral from "@/assets/products/112nd-lateral.png";
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
-const product210dGallery = [img210dFrente2, img210dFrente, img210dLateral1, img210dLateral2, img210dLateral3, img210dTraseira];
+const product210dGallery = [img210dFrente2, img210dLateral1, img210dLateral2, img210dLateral3, img210dTraseira];
 const productEasy2x10dGallery = [imgEasy2x10dFrente, imgEasy2x10dLateral1, imgEasy2x10dLateral2, imgEasy2x10dCima, imgEasy2x10dTraseira];
 const productEasy1x10dGallery = [imgEasy1x10dFrente, imgEasy1x10dLateral1, imgEasy1x10dLateral2, imgEasy1x10dCima, imgEasy1x10dTraseira];
 const productEasy1x12dGallery = [imgEasy1x12dFrente, imgEasy1x12dLateral1, imgEasy1x12dLateral2, imgEasy1x12dCima, imgEasy1x12dTraseira];
