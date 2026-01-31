@@ -1,15 +1,27 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Zap, AlertTriangle, Gauge, Volume2 } from "lucide-react";
 import dicasUso1 from "@/assets/dicas/dicas-uso-1.jpg";
 import dicasUso2 from "@/assets/dicas/dicas-uso-2.jpg";
+import { useAutoNavigate } from "@/hooks/useAutoNavigate";
 
 const DicasDeUso = () => {
+  const footerRef = useRef<HTMLElement>(null);
+  const { isFadingOut } = useAutoNavigate(footerRef);
+
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      <main className="pt-24 pb-16">
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={isFadingOut ? "fading" : "visible"}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isFadingOut ? 0 : 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="min-h-screen bg-white"
+      >
+        <Header />
+        <main className="pt-24 pb-16">
         <div className="container mx-auto px-6 lg:px-12">
           {/* Hero Section */}
           <motion.div
@@ -261,8 +273,9 @@ const DicasDeUso = () => {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+      <Footer ref={footerRef} />
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

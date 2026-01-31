@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Send, Plus, Minus, Crown, Zap, FileText, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useAutoNavigate } from "@/hooks/useAutoNavigate";
 
 interface Product {
   id: string;
@@ -126,6 +127,8 @@ interface CartItem {
 }
 
 const Orcamento = () => {
+  const footerRef = useRef<HTMLElement>(null);
+  const { isFadingOut } = useAutoNavigate(footerRef);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [formData, setFormData] = useState({
     nome: "",
@@ -320,9 +323,16 @@ const Orcamento = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="pt-24 pb-16">
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={isFadingOut ? "fading" : "visible"}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isFadingOut ? 0 : 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="min-h-screen bg-background"
+      >
+        <Header />
+        <main className="pt-24 pb-16">
         <div className="container mx-auto px-6 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -549,8 +559,9 @@ const Orcamento = () => {
           </motion.div>
         </div>
       </main>
-      <Footer />
-    </div>
+      <Footer ref={footerRef} />
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

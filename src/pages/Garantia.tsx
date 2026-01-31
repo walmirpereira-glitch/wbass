@@ -1,14 +1,25 @@
+import { useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Shield, AlertTriangle, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import garantiaHero from "@/assets/garantia-hero.jpg";
+import { useAutoNavigate } from "@/hooks/useAutoNavigate";
 
 const Garantia = () => {
+  const footerRef = useRef<HTMLElement>(null);
+  const { isFadingOut } = useAutoNavigate(footerRef);
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={isFadingOut ? "fading" : "visible"}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isFadingOut ? 0 : 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="min-h-screen bg-gray-50"
+      >
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-6 lg:px-12">
           <motion.div
@@ -121,8 +132,9 @@ const Garantia = () => {
           </motion.div>
         </div>
       </main>
-      <Footer />
-    </div>
+      <Footer ref={footerRef} />
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
