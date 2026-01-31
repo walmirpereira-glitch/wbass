@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Wbass Cabinets Design System - Bold & Professional */
+/* Wbass Cabinets Design System - Premium & Professional */
 
 @layer base {
   :root {
@@ -39,7 +39,7 @@
     --input: 0 0% 20%;
     --ring: 130 60% 35%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     /* Custom brand tokens */
     --wbass-green: 130 60% 35%;
@@ -56,13 +56,15 @@
     --gradient-overlay: linear-gradient(180deg, transparent 0%, hsl(0 0% 5% / 0.9) 100%);
     --gradient-metal: linear-gradient(135deg, hsl(0 0% 65%), hsl(0 0% 85%), hsl(0 0% 55%));
 
-    /* Shadows */
+    /* Shadows - Premium soft shadows */
     --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.5);
-    --shadow-green: 0 4px 30px -4px hsl(130 60% 35% / 0.25);
+    --shadow-green: 0 4px 30px -4px hsl(130 60% 35% / 0.4);
     --shadow-elevated: 0 20px 60px -15px hsl(0 0% 0% / 0.7);
+    --shadow-card: 0 2px 12px -2px hsl(0 0% 0% / 0.15);
+    --shadow-card-hover: 0 8px 30px -8px hsl(0 0% 0% / 0.25);
 
     /* Typography */
-    --font-display: 'Bebas Neue', Impact, sans-serif;
+    --font-display: 'Montserrat', sans-serif;
     --font-body: 'Inter', -apple-system, sans-serif;
 
     /* Animations */
@@ -91,11 +93,12 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
+    letter-spacing: 0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    @apply font-normal tracking-wide;
+    @apply font-bold tracking-tight;
   }
 
   /* Selection styling */
@@ -153,6 +156,61 @@
   .glow-green {
     box-shadow: 0 0 40px -10px hsl(var(--primary) / 0.4);
   }
+
+  /* Premium card styling */
+  .card-premium {
+    background: hsl(var(--card));
+    border: 1px solid hsl(0 0% 15%);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    transition: all var(--duration-medium) var(--transition-smooth);
+  }
+
+  .card-premium:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: var(--shadow-card-hover), 0 0 20px -5px hsl(var(--primary) / 0.15);
+    transform: translateY(-2px);
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    background: hsl(0 0% 100% / 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid hsl(0 0% 90%);
+  }
+
+  .glass-dark {
+    background: hsl(0 0% 5% / 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid hsl(0 0% 20%);
+  }
+
+  /* Button glow effect */
+  .btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all var(--duration-medium) var(--transition-smooth);
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 25px -5px hsl(var(--primary) / 0.5);
+    transform: scale(1.02);
+  }
+
+  .btn-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+
+  .btn-glow:hover::before {
+    transform: translateX(100%);
+  }
 }
 
 @layer utilities {
@@ -167,5 +225,14 @@
   .animate-smooth {
     transition-timing-function: var(--transition-smooth);
     transition-duration: var(--duration-medium);
+  }
+
+  /* Editorial spacing */
+  .section-spacing {
+    @apply py-28 lg:py-36;
+  }
+
+  .container-editorial {
+    @apply container mx-auto px-8 lg:px-16;
   }
 }
