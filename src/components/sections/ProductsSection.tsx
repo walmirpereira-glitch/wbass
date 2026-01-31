@@ -66,6 +66,9 @@ import img112dTraseira from "@/assets/products/112d-traseira.jpg";
 import img112ndFrente from "@/assets/products/112nd-frente.png";
 import img112ndTraseira from "@/assets/products/112nd-traseira.png";
 import img112ndLateral from "@/assets/products/112nd-lateral.png";
+
+// Product images - Easy 1x12ND
+import imgEasy1x12ndFrente from "@/assets/products/easy-1x12nd-frente.jpg";
 const product212dGallery = [img212dFrente, img212dLateral1, img212dLateral2, img212dTraseira];
 const product210dGallery = [img210dFrente2, img210dLateral3];
 const product210dpGallery = [img210dFrente, img210dLateral1, img210dLateral2, img210dTraseira];
@@ -75,6 +78,7 @@ const productEasy1x12dGallery = [imgEasy1x12dFrente, imgEasy1x12dLateral1, imgEa
 const product410dpGallery = [img410dpFrente, img410dpLateral];
 const product112dGallery = [img112dFrente, img112dLateral1, img112dLateral2, img112dCima, img112dTraseira];
 const product112ndGallery = [img112ndFrente, img112ndLateral, img112ndTraseira];
+const productEasy1x12ndGallery = [imgEasy1x12ndFrente];
 
 const premiumProducts: Product[] = [
   {
@@ -193,6 +197,8 @@ const easyProducts: Product[] = [
     description: "1 falante 12\" em ferrite nacional, não possui driver",
     specs: "400W RMS | 4 ou 8 ohms",
     price: 2502.08,
+    image: imgEasy1x12ndFrente,
+    gallery: productEasy1x12ndGallery,
   },
 ];
 
