@@ -7,7 +7,8 @@ import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Instagram, Facebook } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import wbassLogo from "@/assets/wbass-logo-new.png";
+import wbassLogo from "@/assets/wbass-logo-transparent.png";
+import { useLanguage } from "@/contexts/language";
 
 const WhatsAppIcon = () => (
   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -35,6 +36,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage } = useLanguage();
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
@@ -87,6 +89,35 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
+            {/* Language Selector */}
+            <div className="flex items-center gap-1 bg-background/70 backdrop-blur-sm rounded-full px-2.5 py-1 border border-border/60">
+              <button
+                type="button"
+                onClick={() => setLanguage("pt")}
+                className={`px-2 py-0.5 text-xs font-display font-bold tracking-wide rounded-full transition-colors ${
+                  language === "pt"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-label="Português"
+              >
+                PT
+              </button>
+              <span className="text-muted-foreground/50 text-xs">|</span>
+              <button
+                type="button"
+                onClick={() => setLanguage("en")}
+                className={`px-2 py-0.5 text-xs font-display font-bold tracking-wide rounded-full transition-colors ${
+                  language === "en"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-label="English"
+              >
+                EN
+              </button>
+            </div>
+
             {navLinks.map((link) => (
               <Link
                 key={link.anchor}
@@ -129,6 +160,35 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
             className="md:hidden bg-white border-t border-gray-100 shadow-lg"
           >
             <div className="flex flex-col py-4">
+              {/* Language Selector (Mobile) */}
+              <div className="px-6 pb-3">
+                <div className="inline-flex items-center gap-1 bg-background rounded-full px-2.5 py-1 border border-border">
+                  <button
+                    type="button"
+                    onClick={() => setLanguage("pt")}
+                    className={`px-2 py-0.5 text-xs font-display font-bold tracking-wide rounded-full transition-colors ${
+                      language === "pt"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    PT
+                  </button>
+                  <span className="text-muted-foreground/50 text-xs">|</span>
+                  <button
+                    type="button"
+                    onClick={() => setLanguage("en")}
+                    className={`px-2 py-0.5 text-xs font-display font-bold tracking-wide rounded-full transition-colors ${
+                      language === "en"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    EN
+                  </button>
+                </div>
+              </div>
+
               {navLinks.map((link) => (
                 <Link
                   key={link.anchor}
