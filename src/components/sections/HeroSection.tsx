@@ -14,7 +14,7 @@ import lab3 from "@/assets/gallery/lab-3.jpg";
 
 const galleryImages = [lab1, lab2, lab3];
 
-type Language = "pt" | "en";
+import { useLanguage } from "@/contexts/language";
 
 const translations = {
   pt: {
@@ -84,7 +84,7 @@ function shuffleArray<T>(array: T[]): T[] {
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
-  const [language, setLanguage] = useState<Language>("pt");
+  const { language, setLanguage } = useLanguage();
   
   // Shuffle gallery images on mount
   const shuffledGallery = useMemo(() => shuffleArray(galleryImages), []);
@@ -120,7 +120,7 @@ export function HeroSection() {
   return (
     <section id="hero" className="relative w-full">
       {/* Language Selector */}
-      <div className="absolute top-4 right-4 md:top-6 md:right-8 z-20">
+      <div className="absolute top-20 right-4 md:top-24 md:right-8 z-20">
         <div className="flex items-center gap-1 bg-background/90 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-lg border border-border/50">
           <button
             onClick={() => setLanguage("pt")}
