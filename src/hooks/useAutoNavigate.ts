@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const pageOrder = [
@@ -17,7 +17,6 @@ export const useAutoNavigate = (
 ) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isFadingOut, setIsFadingOut] = useState(false);
   const forwardTimerRef = useRef<NodeJS.Timeout | null>(null);
   const backwardTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isAtTopRef = useRef(false);
@@ -26,9 +25,6 @@ export const useAutoNavigate = (
     const currentIndex = pageOrder.indexOf(location.pathname);
     const nextPage = currentIndex < pageOrder.length - 1 
       ? pageOrder[currentIndex + 1] 
-      : null;
-    const prevPage = currentIndex > 0 
-      ? pageOrder[currentIndex - 1] 
       : null;
 
     // Forward navigation (footer)
@@ -39,12 +35,8 @@ export const useAutoNavigate = (
           
           if (entry.isIntersecting) {
             forwardTimerRef.current = setTimeout(() => {
-              setIsFadingOut(true);
-              setTimeout(() => {
-                window.scrollTo({ top: 0, behavior: "instant" });
-                navigate(nextPage);
-                setIsFadingOut(false);
-              }, 500);
+              window.scrollTo({ top: 0, behavior: "instant" });
+              navigate(nextPage);
             }, 500);
           } else {
             if (forwardTimerRef.current) {
@@ -84,15 +76,11 @@ export const useAutoNavigate = (
           isAtTopRef.current = true;
           backwardTimerRef.current = setTimeout(() => {
             if (window.scrollY <= 5) {
-              setIsFadingOut(true);
+              navigate(prevPage);
+              // Scroll to bottom of previous page
               setTimeout(() => {
-                navigate(prevPage);
-                // Scroll to bottom of previous page
-                setTimeout(() => {
-                  window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
-                  setIsFadingOut(false);
-                }, 50);
-              }, 500);
+                window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
+              }, 50);
             }
           }, 500);
         }
@@ -112,6 +100,4 @@ export const useAutoNavigate = (
       if (backwardTimerRef.current) clearTimeout(backwardTimerRef.current);
     };
   }, [navigate, location.pathname]);
-
-  return { isFadingOut };
 };
