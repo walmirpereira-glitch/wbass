@@ -87,9 +87,9 @@ export function AboutSection() {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-10 mt-12">
-              {[
-                { number: "10+", label: "Anos de Experiência" },
-                { number: "500+", label: "Cabinets Produzidos" },
+{[
+                { number: "15+", label: "Anos de Experiência" },
+                { number: "milhares de", label: "Cabinets Produzidos" },
                 { number: "100%", label: "Satisfação" },
               ].map((stat, index) => (
                 <motion.div
