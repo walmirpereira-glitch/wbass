@@ -128,7 +128,7 @@ interface CartItem {
 
 const Orcamento = () => {
   const footerRef = useRef<HTMLElement>(null);
-  const { isFadingOut } = useAutoNavigate(footerRef);
+  useAutoNavigate(footerRef);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [formData, setFormData] = useState({
     nome: "",
@@ -323,16 +323,9 @@ const Orcamento = () => {
   };
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={isFadingOut ? "fading" : "visible"}
-        initial={{ opacity: 1 }}
-        animate={{ opacity: isFadingOut ? 0 : 1 }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="min-h-screen bg-background"
-      >
-        <Header />
-        <main className="pt-24 pb-16">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="pt-24 pb-16">
         <div className="container mx-auto px-6 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -560,8 +553,7 @@ const Orcamento = () => {
         </div>
       </main>
       <Footer ref={footerRef} />
-      </motion.div>
-    </AnimatePresence>
+    </div>
   );
 };
 
