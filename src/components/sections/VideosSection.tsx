@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef, useCallback } from "react";
 
 const videos = [
   { id: "QZmcgy02MKk", title: "Video 1" },
@@ -6,7 +7,69 @@ const videos = [
   { id: "U6vWIAr4BZw", title: "Video 3" },
 ];
 
+// Extend window to include YouTube API
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
+
 export const VideosSection = () => {
+  const playersRef = useRef<{ [key: string]: any }>({});
+  const currentlyPlayingRef = useRef<string | null>(null);
+
+  const handlePlayerStateChange = useCallback((videoId: string, event: any) => {
+    // YT.PlayerState.PLAYING === 1
+    if (event.data === 1) {
+      // Pause all other videos
+      Object.entries(playersRef.current).forEach(([id, player]) => {
+        if (id !== videoId && player && typeof player.pauseVideo === 'function') {
+          player.pauseVideo();
+        }
+      });
+      currentlyPlayingRef.current = videoId;
+    }
+  }, []);
+
+  useEffect(() => {
+    // Load YouTube IFrame API
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    const initPlayers = () => {
+      videos.forEach((video) => {
+        if (!playersRef.current[video.id]) {
+          playersRef.current[video.id] = new window.YT.Player(`player-${video.id}`, {
+            events: {
+              onStateChange: (event: any) => handlePlayerStateChange(video.id, event),
+            },
+          });
+        }
+      });
+    };
+
+    if (window.YT && window.YT.Player) {
+      initPlayers();
+    } else {
+      window.onYouTubeIframeAPIReady = initPlayers;
+    }
+
+    return () => {
+      // Cleanup
+      Object.values(playersRef.current).forEach((player: any) => {
+        if (player && typeof player.destroy === 'function') {
+          player.destroy();
+        }
+      });
+      playersRef.current = {};
+    };
+  }, [handlePlayerStateChange]);
+
   return (
     <section id="videos" className="py-28 lg:py-36 relative overflow-hidden" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Radial gradient overlay with brand green */}
@@ -77,7 +140,8 @@ export const VideosSection = () => {
               >
                 <div className="aspect-[9/16]">
                   <iframe
-                    src={`https://www.youtube.com/embed/${video.id}?modestbranding=1&rel=0`}
+                    id={`player-${video.id}`}
+                    src={`https://www.youtube.com/embed/${video.id}?enablejsapi=1&modestbranding=1&rel=0`}
                     title={video.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
