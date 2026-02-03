@@ -27,7 +27,6 @@ export const useAutoNavigate = (
       ? pageOrder[currentIndex + 1] 
       : null;
 
-    // Forward navigation (footer)
     if (footerRef.current && nextPage) {
       const footerObserver = new IntersectionObserver(
         (entries) => {
@@ -35,9 +34,10 @@ export const useAutoNavigate = (
           
           if (entry.isIntersecting) {
             forwardTimerRef.current = setTimeout(() => {
-              window.scrollTo({ top: 0, behavior: "instant" });
+              // Navegação instantânea sem scroll
               navigate(nextPage);
-            }, 500);
+              window.scrollTo(0, 0);
+            }, 400);
           } else {
             if (forwardTimerRef.current) {
               clearTimeout(forwardTimerRef.current);
@@ -49,7 +49,6 @@ export const useAutoNavigate = (
       );
       footerObserver.observe(footerRef.current);
 
-      // Cleanup for footer observer
       const currentFooter = footerRef.current;
       return () => {
         footerObserver.disconnect();
@@ -58,7 +57,6 @@ export const useAutoNavigate = (
     }
   }, [footerRef, navigate, location.pathname]);
 
-  // Backward navigation (scroll to top)
   useEffect(() => {
     const currentIndex = pageOrder.indexOf(location.pathname);
     const prevPage = currentIndex > 0 
@@ -70,19 +68,18 @@ export const useAutoNavigate = (
     const handleScroll = () => {
       const scrollY = window.scrollY;
       
-      // Check if at top (with small threshold)
       if (scrollY <= 5) {
         if (!isAtTopRef.current) {
           isAtTopRef.current = true;
           backwardTimerRef.current = setTimeout(() => {
             if (window.scrollY <= 5) {
               navigate(prevPage);
-              // Scroll to bottom of previous page
-              setTimeout(() => {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
-              }, 50);
+              // Scroll para o final da página anterior
+              requestAnimationFrame(() => {
+                window.scrollTo(0, document.body.scrollHeight);
+              });
             }
-          }, 500);
+          }, 400);
         }
       } else {
         isAtTopRef.current = false;
