@@ -1,17 +1,7 @@
 import { X, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useCallback } from "react";
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  specs: string;
-  price: number;
-  image?: string;
-  gallery?: string[];
-}
+import { Product } from "@/data/products";
 
 interface ProductGalleryModalProps {
   isOpen: boolean;
