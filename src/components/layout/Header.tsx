@@ -92,7 +92,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
                 key={link.anchor}
                 to={link.anchor}
                 onClick={handleLinkClick}
-                className={`text-gray-700 hover:text-primary font-medium text-sm uppercase tracking-wider transition-colors ${
+                className={`text-gray-700 hover:text-primary font-bold text-sm uppercase tracking-wider transition-colors ${
                   location.pathname === link.anchor ? "text-primary" : ""
                 }`}
               >
@@ -134,7 +134,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
                   key={link.anchor}
                   to={link.anchor}
                   onClick={handleLinkClick}
-                  className={`block px-6 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 font-medium text-sm uppercase tracking-wider transition-colors ${
+                  className={`block px-6 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 font-bold text-sm uppercase tracking-wider transition-colors ${
                     location.pathname === link.anchor ? "text-primary bg-gray-50" : ""
                   }`}
                 >
