@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import heroInicio1 from "@/assets/hero-inicio1.jpg";
 import heroInicio2 from "@/assets/hero-inicio2.jpg";
 import heroVideo from "@/assets/hero-video.mp4";
@@ -37,6 +37,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export function HeroSection() {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
   
@@ -170,7 +171,7 @@ export function HeroSection() {
                 Ver Produtos
               </Button>
             </Link>
-            <Link to="/sobre">
+            <Link to="/sobre" onClick={() => window.scrollTo(0, 0)}>
               <Button 
                 variant="outline" 
                 size="xl"
