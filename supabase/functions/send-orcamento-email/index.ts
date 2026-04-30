@@ -58,6 +58,7 @@ function escapeHtml(unsafe: string): string {
 interface OrcamentoRequest {
   nomeCompleto: string;
   email: string;
+  telefone: string;
   cpf: string;
   endereco: string;
   cidade: string;
@@ -91,10 +92,10 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { nomeCompleto, email, cpf, endereco, cidade, estado, produtos, total }: OrcamentoRequest = await req.json();
+    const { nomeCompleto, email, telefone, cpf, endereco, cidade, estado, produtos, total }: OrcamentoRequest = await req.json();
 
     // Validate required fields
-    if (!nomeCompleto || !email || !cpf || !endereco || !cidade || !estado) {
+    if (!nomeCompleto || !email || !telefone || !cpf || !endereco || !cidade || !estado) {
       return new Response(
         JSON.stringify({ success: false, error: "Por favor, preencha todos os campos obrigatórios." }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
@@ -120,6 +121,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Sanitize inputs for HTML email
     const safeNome = escapeHtml(nomeCompleto.trim().substring(0, 100));
     const safeEmail = escapeHtml(email.trim().substring(0, 255));
+    const safeTelefone = escapeHtml(telefone.trim().substring(0, 20));
     const safeCpf = escapeHtml(cpf.trim().substring(0, 14));
     const safeEndereco = escapeHtml(endereco.trim().substring(0, 200));
     const safeCidade = escapeHtml(cidade.trim().substring(0, 100));
@@ -153,6 +155,7 @@ const handler = async (req: Request): Promise<Response> => {
         <h2>Dados do Cliente</h2>
         <p><strong>Nome:</strong> ${safeNome}</p>
         <p><strong>Email:</strong> ${safeEmail}</p>
+        <p><strong>Telefone:</strong> ${safeTelefone}</p>
         <p><strong>CPF:</strong> ${safeCpf}</p>
         <p><strong>Endereço:</strong> ${safeEndereco}</p>
         <p><strong>Cidade:</strong> ${safeCidade}</p>
