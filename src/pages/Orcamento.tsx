@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Plus, Minus, Crown, Zap, FileText, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAutoNavigate } from "@/hooks/useAutoNavigate";
-import { supabase } from "@/integrations/supabase/client";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaqjpzaa";
 
 interface Product {
   id: string;
