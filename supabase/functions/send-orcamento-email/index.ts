@@ -146,8 +146,8 @@ const handler = async (req: Request): Promise<Response> => {
     `).join('');
 
     const emailResponse = await resend.emails.send({
-      from: "Wbass Cabinets <noreply@resend.dev>",
-      to: ["contato@wbasscabinets.com"],
+      from: "Wbass Cabinets <onboarding@resend.dev>",
+      to: ["walmir_pereira@hotmail.com"],
       subject: `Novo Orçamento - ${safeNome}`,
       html: `
         <h1 style="color: #50C878;">Novo Pedido de Orçamento</h1>
@@ -183,6 +183,14 @@ const handler = async (req: Request): Promise<Response> => {
       `,
       reply_to: email,
     });
+
+    if (emailResponse.error) {
+      console.error("Resend retornou erro:", emailResponse.error);
+      return new Response(
+        JSON.stringify({ success: false, error: "Falha ao enviar email. Tente novamente." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     console.log("Email de orçamento enviado com sucesso:", emailResponse);
 
