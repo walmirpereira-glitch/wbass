@@ -77,17 +77,23 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: {
-          nomeCompleto: name,
-          email,
-          telefone: phone,
-          mensagem: message,
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message,
+          _subject: `Novo Contato - ${name}`,
+        }),
       });
 
-      if (error || !data?.success) {
-        throw new Error(data?.error || error?.message || 'Erro ao enviar');
+      if (!response.ok) {
+        throw new Error("Erro ao enviar");
       }
 
       toast({
