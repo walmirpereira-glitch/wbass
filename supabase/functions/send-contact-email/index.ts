@@ -108,8 +108,8 @@ const handler = async (req: Request): Promise<Response> => {
     const safeMensagem = escapeHtml((mensagem || "Não informada").trim().substring(0, 1000));
 
     const emailResponse = await resend.emails.send({
-      from: "Wbass Cabinets <noreply@resend.dev>",
-      to: ["contato@wbasscabinets.com"],
+      from: "Wbass Cabinets <onboarding@resend.dev>",
+      to: ["walmir_pereira@hotmail.com"],
       subject: `Novo Contato - ${safeNome}`,
       html: `
         <h1>Novo Contato do Site</h1>
@@ -120,6 +120,14 @@ const handler = async (req: Request): Promise<Response> => {
       `,
       reply_to: email,
     });
+
+    if (emailResponse.error) {
+      console.error("Resend retornou erro:", emailResponse.error);
+      return new Response(
+        JSON.stringify({ success: false, error: "Falha ao enviar email. Tente novamente." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     console.log("Email enviado com sucesso:", emailResponse);
 
