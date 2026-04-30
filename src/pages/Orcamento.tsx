@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Plus, Minus, Crown, Zap, FileText, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAutoNavigate } from "@/hooks/useAutoNavigate";
-import { supabase } from "@/integrations/supabase/client";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaqjpzaa";
 
 interface Product {
   id: string;
@@ -184,28 +185,38 @@ const Orcamento = () => {
 
     const enderecoCompleto = `${rua}, ${numero} - CEP ${cep}`;
 
+    const produtosTexto = cart
+      .map(
+        (item) =>
+          `${item.product.name} (${item.product.line === "premium" ? "Premium" : "Easy"}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+      )
+      .join("\n");
+
     try {
-      const { data, error } = await supabase.functions.invoke('send-orcamento-email', {
-        body: {
-          nomeCompleto: nome,
-          email,
-          telefone,
-          cpf,
-          endereco: enderecoCompleto,
-          cidade,
-          estado,
-          produtos: cart.map((item) => ({
-            name: item.product.name,
-            quantity: item.quantity,
-            price: item.product.price,
-            line: item.product.line,
-          })),
-          total,
+      const payload = {
+        nome,
+        email,
+        telefone,
+        cpf,
+        endereco: enderecoCompleto,
+        cidade,
+        estado,
+        produtos: produtosTexto,
+        total: `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
+        _subject: `Nova Proposta - ${nome}`,
+      };
+
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
+        body: JSON.stringify(payload),
       });
 
-      if (error || !data?.success) {
-        throw new Error(data?.error || error?.message || 'Erro ao enviar');
+      if (!response.ok) {
+        throw new Error("Erro ao enviar");
       }
 
       toast({

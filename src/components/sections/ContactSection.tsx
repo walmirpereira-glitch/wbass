@@ -4,8 +4,9 @@ import { useRef, useState } from "react";
 import { MapPin, Phone, Mail, Instagram, Facebook, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import contactShowcase from "@/assets/contact-showcase.jpg";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaqjpzaa";
 
 const contactInfo = [
   {
@@ -76,17 +77,23 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: {
-          nomeCompleto: name,
-          email,
-          telefone: phone,
-          mensagem: message,
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message,
+          _subject: `Novo Contato - ${name}`,
+        }),
       });
 
-      if (error || !data?.success) {
-        throw new Error(data?.error || error?.message || 'Erro ao enviar');
+      if (!response.ok) {
+        throw new Error("Erro ao enviar");
       }
 
       toast({
