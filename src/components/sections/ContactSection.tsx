@@ -4,8 +4,9 @@ import { useRef, useState } from "react";
 import { MapPin, Phone, Mail, Instagram, Facebook, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import contactShowcase from "@/assets/contact-showcase.jpg";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaqjpzaa";
 
 const contactInfo = [
   {
