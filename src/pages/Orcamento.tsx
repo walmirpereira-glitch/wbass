@@ -133,6 +133,7 @@ const Orcamento = () => {
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
+    telefone: "",
     cpf: "",
     rua: "",
     numero: "",
@@ -163,6 +164,7 @@ const Orcamento = () => {
     const formDataToSend = new FormData();
     formDataToSend.append('nome', formData.nome);
     formDataToSend.append('email', formData.email);
+    formDataToSend.append('telefone', formData.telefone);
     formDataToSend.append('cpf', formData.cpf);
     formDataToSend.append('rua', formData.rua);
     formDataToSend.append('numero', formData.numero);
@@ -191,6 +193,7 @@ const Orcamento = () => {
         setFormData({
           nome: "",
           email: "",
+          telefone: "",
           cpf: "",
           rua: "",
           numero: "",
@@ -383,6 +386,20 @@ const Orcamento = () => {
                       required
                       className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
                       placeholder="seu@email.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs uppercase tracking-[0.15em] text-muted-foreground block mb-3 font-medium">
+                      Telefone *
+                    </label>
+                    <input
+                      type="tel"
+                      name="telefone"
+                      value={formData.telefone}
+                      onChange={(e) => handleInputChange("telefone", e.target.value)}
+                      required
+                      className="w-full bg-background border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary transition-colors duration-300 placeholder:text-muted-foreground"
+                      placeholder="(00) 00000-0000"
                     />
                   </div>
                   <div>
