@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Plus, Minus, Crown, Zap, FileText, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAutoNavigate } from "@/hooks/useAutoNavigate";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
   id: string;
@@ -155,56 +156,74 @@ const Orcamento = () => {
       return;
     }
 
+    // Client-side validation
+    const nome = formData.nome.trim();
+    const email = formData.email.trim();
+    const telefone = formData.telefone.trim();
+    const cpf = formData.cpf.trim();
+    const rua = formData.rua.trim();
+    const numero = formData.numero.trim();
+    const cep = formData.cep.trim();
+    const cidade = formData.cidade.trim();
+    const estado = formData.estado.trim();
+
+    if (!nome || !email || !telefone || !cpf || !rua || !numero || !cep || !cidade || !estado) {
+      toast({ title: "Campos obrigatórios", description: "Preencha todos os campos.", variant: "destructive" });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({ title: "Email inválido", description: "Informe um email válido.", variant: "destructive" });
+      return;
+    }
+    if (estado.length > 2) {
+      toast({ title: "Estado inválido", description: "Use a sigla do estado (ex: SP).", variant: "destructive" });
+      return;
+    }
+
     setIsSubmitting(true);
 
-    const produtosTextoSubmit = cart.map((item) => 
-      `${item.product.name} (${item.product.line === 'premium' ? 'Premium' : 'Easy'}) - Qtd: ${item.quantity} - R$ ${(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-    ).join(' | ');
-
-    const formDataToSend = new FormData();
-    formDataToSend.append('nome', formData.nome);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('telefone', formData.telefone);
-    formDataToSend.append('cpf', formData.cpf);
-    formDataToSend.append('rua', formData.rua);
-    formDataToSend.append('numero', formData.numero);
-    formDataToSend.append('cep', formData.cep);
-    formDataToSend.append('cidade', formData.cidade);
-    formDataToSend.append('estado', formData.estado);
-    formDataToSend.append('produtos', produtosTextoSubmit);
-    formDataToSend.append('total', `R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`);
-    formDataToSend.append('_subject', 'Nova Proposta Wbass');
+    const enderecoCompleto = `${rua}, ${numero} - CEP ${cep}`;
 
     try {
-      const response = await fetch('https://formspree.io/f/xaqjpzaa', {
-        method: 'POST',
-        body: formDataToSend,
-        headers: {
-          'Accept': 'application/json',
+      const { data, error } = await supabase.functions.invoke('send-orcamento-email', {
+        body: {
+          nomeCompleto: nome,
+          email,
+          telefone,
+          cpf,
+          endereco: enderecoCompleto,
+          cidade,
+          estado,
+          produtos: cart.map((item) => ({
+            name: item.product.name,
+            quantity: item.quantity,
+            price: item.product.price,
+            line: item.product.line,
+          })),
+          total,
         },
       });
 
-      if (response.ok) {
-        toast({
-          title: "Proposta enviada com sucesso!",
-          description: "Entraremos em contato em breve com sua proposta.",
-        });
-        // Limpar formulário e carrinho
-        setFormData({
-          nome: "",
-          email: "",
-          telefone: "",
-          cpf: "",
-          rua: "",
-          numero: "",
-          cep: "",
-          cidade: "",
-          estado: "",
-        });
-        setCart([]);
-      } else {
-        throw new Error('Erro ao enviar');
+      if (error || !data?.success) {
+        throw new Error(data?.error || error?.message || 'Erro ao enviar');
       }
+
+      toast({
+        title: "Proposta enviada com sucesso!",
+        description: "Entraremos em contato em breve com sua proposta.",
+      });
+      setFormData({
+        nome: "",
+        email: "",
+        telefone: "",
+        cpf: "",
+        rua: "",
+        numero: "",
+        cep: "",
+        cidade: "",
+        estado: "",
+      });
+      setCart([]);
     } catch (error) {
       toast({
         title: "Erro ao enviar",

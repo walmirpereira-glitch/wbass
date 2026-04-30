@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { MapPin, Phone, Mail, Instagram, Facebook, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import contactShowcase from "@/assets/contact-showcase.jpg";
 
 const contactInfo = [
@@ -48,39 +49,51 @@ export function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Client-side validation
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const phone = formData.phone.trim();
+    const message = formData.message.trim();
+
+    if (!name || name.length > 100) {
+      toast({ title: "Nome inválido", description: "Informe seu nome (até 100 caracteres).", variant: "destructive" });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 255) {
+      toast({ title: "Email inválido", description: "Informe um email válido.", variant: "destructive" });
+      return;
+    }
+    if (!phone || phone.length > 20) {
+      toast({ title: "Telefone inválido", description: "Informe um telefone válido.", variant: "destructive" });
+      return;
+    }
+    if (!message || message.length > 1000) {
+      toast({ title: "Mensagem inválida", description: "A mensagem deve ter até 1000 caracteres.", variant: "destructive" });
+      return;
+    }
+
     setIsSubmitting(true);
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('phone', formData.phone);
-    formDataToSend.append('message', formData.message);
-    formDataToSend.append('_subject', 'Nova mensagem de contato Wbass');
-
     try {
-      const response = await fetch('https://formspree.io/f/xaqjpzaa', {
-        method: 'POST',
-        body: formDataToSend,
-        headers: {
-          'Accept': 'application/json',
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          nomeCompleto: name,
+          email,
+          telefone: phone,
+          mensagem: message,
         },
       });
 
-      if (response.ok) {
-        toast({
-          title: "Mensagem enviada com sucesso!",
-          description: "Entraremos em contato em breve.",
-        });
-        // Limpar formulário
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          message: "",
-        });
-      } else {
-        throw new Error('Erro ao enviar');
+      if (error || !data?.success) {
+        throw new Error(data?.error || error?.message || 'Erro ao enviar');
       }
+
+      toast({
+        title: "Mensagem enviada com sucesso!",
+        description: "Entraremos em contato em breve.",
+      });
+      setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {
       toast({
         title: "Erro ao enviar",
