@@ -44,7 +44,10 @@ export const useAutoNavigate = (
     const startForwardTimer = () => {
       if (forwardTimerRef.current) clearTimeout(forwardTimerRef.current);
       if (!isFooterVisibleRef.current) return;
-      if (Date.now() - lastNavigationTime < NAVIGATION_COOLDOWN) return;
+
+      const elapsed = Date.now() - lastNavigationTime;
+      const cooldownRemaining = NAVIGATION_COOLDOWN - elapsed;
+      const delay = cooldownRemaining > 0 ? NAV_DELAY + cooldownRemaining : NAV_DELAY;
 
       forwardTimerRef.current = setTimeout(() => {
         if (!isFooterVisibleRef.current) return;
@@ -52,7 +55,7 @@ export const useAutoNavigate = (
         lastNavigationTime = Date.now();
         navigate(nextPage);
         window.scrollTo(0, 0);
-      }, NAV_DELAY);
+      }, delay);
     };
 
     const cancelForwardTimer = () => {
