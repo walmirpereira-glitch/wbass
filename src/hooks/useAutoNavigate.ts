@@ -39,43 +39,70 @@ export const useAutoNavigate = (
       ? pageOrder[currentIndex + 1] 
       : null;
 
-    if (footerRef.current && nextPage) {
-      const footerObserver = new IntersectionObserver(
-        (entries) => {
-          const [entry] = entries;
-          
-          if (entry.isIntersecting) {
-            // Verificar cooldown antes de iniciar timer
-            if (Date.now() - lastNavigationTime < NAVIGATION_COOLDOWN) {
-              return;
-            }
-            
-            forwardTimerRef.current = setTimeout(() => {
-              // Verificar cooldown novamente antes de navegar
-              if (Date.now() - lastNavigationTime < NAVIGATION_COOLDOWN) {
-                return;
-              }
-              lastNavigationTime = Date.now();
-              navigate(nextPage);
-              window.scrollTo(0, 0);
-            }, 500);
-          } else {
-            if (forwardTimerRef.current) {
-              clearTimeout(forwardTimerRef.current);
-              forwardTimerRef.current = null;
-            }
-          }
-        },
-        { threshold: 0.5 }
-      );
-      footerObserver.observe(footerRef.current);
+    if (!footerRef.current || !nextPage) return;
 
-      const currentFooter = footerRef.current;
-      return () => {
-        footerObserver.disconnect();
-        if (forwardTimerRef.current) clearTimeout(forwardTimerRef.current);
-      };
-    }
+    const startForwardTimer = () => {
+      if (forwardTimerRef.current) clearTimeout(forwardTimerRef.current);
+      if (!isFooterVisibleRef.current) return;
+      if (Date.now() - lastNavigationTime < NAVIGATION_COOLDOWN) return;
+
+      forwardTimerRef.current = setTimeout(() => {
+        if (!isFooterVisibleRef.current) return;
+        if (Date.now() - lastNavigationTime < NAVIGATION_COOLDOWN) return;
+        lastNavigationTime = Date.now();
+        navigate(nextPage);
+        window.scrollTo(0, 0);
+      }, NAV_DELAY);
+    };
+
+    const cancelForwardTimer = () => {
+      if (forwardTimerRef.current) {
+        clearTimeout(forwardTimerRef.current);
+        forwardTimerRef.current = null;
+      }
+    };
+
+    const handleInteraction = () => {
+      if (!isFooterVisibleRef.current) return;
+      // Reinicia o cronômetro a cada interação
+      startForwardTimer();
+    };
+
+    const footerObserver = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          isFooterVisibleRef.current = true;
+          startForwardTimer();
+        } else {
+          isFooterVisibleRef.current = false;
+          cancelForwardTimer();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    footerObserver.observe(footerRef.current);
+
+    const interactionEvents: (keyof WindowEventMap)[] = [
+      "mousemove",
+      "mousedown",
+      "keydown",
+      "touchstart",
+      "touchmove",
+      "wheel",
+      "scroll",
+    ];
+    interactionEvents.forEach((evt) =>
+      window.addEventListener(evt, handleInteraction, { passive: true })
+    );
+
+    return () => {
+      footerObserver.disconnect();
+      cancelForwardTimer();
+      interactionEvents.forEach((evt) =>
+        window.removeEventListener(evt, handleInteraction)
+      );
+    };
   }, [footerRef, navigate, location.pathname]);
 
   useEffect(() => {
