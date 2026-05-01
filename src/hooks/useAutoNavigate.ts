@@ -84,13 +84,10 @@ export const useAutoNavigate = (
     footerObserver.observe(footerRef.current);
 
     const interactionEvents: (keyof WindowEventMap)[] = [
-      "mousemove",
       "mousedown",
       "keydown",
       "touchstart",
-      "touchmove",
       "wheel",
-      "scroll",
     ];
     interactionEvents.forEach((evt) =>
       window.addEventListener(evt, handleInteraction, { passive: true })
