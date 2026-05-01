@@ -26,7 +26,7 @@ export const useAutoNavigate = (
   const isAtTopRef = useRef(false);
   const isFooterVisibleRef = useRef(false);
 
-  const NAV_DELAY = 5000;
+  const NAV_DELAY = 2000;
 
   // Reset cooldown quando a rota muda
   useEffect(() => {
