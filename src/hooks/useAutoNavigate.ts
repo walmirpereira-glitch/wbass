@@ -24,6 +24,9 @@ export const useAutoNavigate = (
   const forwardTimerRef = useRef<NodeJS.Timeout | null>(null);
   const backwardTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isAtTopRef = useRef(false);
+  const isFooterVisibleRef = useRef(false);
+
+  const NAV_DELAY = 5000;
 
   // Reset cooldown quando a rota muda
   useEffect(() => {
