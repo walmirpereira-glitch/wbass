@@ -7,7 +7,7 @@ import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Instagram, Facebook } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import wbassLogo from "@/assets/wbass-logo-header.png.asset.json";
+const wbassLogo = { url: "/wbass-logo.png" };
 
 const WhatsAppIcon = () => (
   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
