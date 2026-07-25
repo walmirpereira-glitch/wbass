@@ -169,11 +169,12 @@ export const FloatingReel = () => {
     >
       <video
         ref={videoRef}
-        src={reelAsset.url}
+        src={`https://wbass.lovable.app${reelAsset.url}`}
         autoPlay
         loop
         muted={muted}
         playsInline
+        crossOrigin="anonymous"
         className="h-full w-full object-cover"
       />
 
