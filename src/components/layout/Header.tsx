@@ -67,7 +67,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
               onClick={handleLinkClick}
               className="flex items-center"
             >
-              <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 md:h-14 w-auto" />
+              <img src={wbassLogo.url} alt="Wbass Cabinets" className="h-10 md:h-12 w-auto max-w-[180px] md:max-w-[220px] object-contain" />
             </Link>
             <div className="hidden sm:flex items-center gap-3">
               {socialLinks.map((link) => (
