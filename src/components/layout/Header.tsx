@@ -7,7 +7,7 @@ import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Instagram, Facebook } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import wbassLogo from "@/assets/wbass-logo-transparent.png";
+import wbassLogo from "@/assets/wbass-logo-header.png.asset.json";
 
 const WhatsAppIcon = () => (
   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
               onClick={handleLinkClick}
               className="flex items-center"
             >
-              <img src={wbassLogo} alt="Wbass Cabinets" className="h-12 md:h-14 w-auto" />
+              <img src={wbassLogo.url} alt="Wbass Cabinets" className="h-10 md:h-12 w-auto max-w-[180px] md:max-w-[220px] object-contain" />
             </Link>
             <div className="hidden sm:flex items-center gap-3">
               {socialLinks.map((link) => (
