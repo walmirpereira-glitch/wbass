@@ -13,6 +13,10 @@ import Orcamento from "./pages/Orcamento.tsx";
 import Garantia from "./pages/Garantia.tsx";
 import DicasDeUso from "./pages/DicasDeUso.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import QuemUsa from "./pages/QuemUsa.tsx";
+import QuemUsaCadastro from "./pages/QuemUsaCadastro.tsx";
+import AdminLogin from "./pages/AdminLogin.tsx";
+import AdminQuemUsa from "./pages/AdminQuemUsa.tsx";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +35,10 @@ const App = () => (
         <Route path="/orcamento" element={<Orcamento />} />
         <Route path="/garantia" element={<Garantia />} />
         <Route path="/dicas-de-uso" element={<DicasDeUso />} />
+        <Route path="/quem-usa" element={<QuemUsa />} />
+        <Route path="/quem-usa/cadastro" element={<QuemUsaCadastro />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/quem-usa" element={<AdminQuemUsa />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
