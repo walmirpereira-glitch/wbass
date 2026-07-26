@@ -81,7 +81,13 @@ const QuemUsaCadastro = () => {
       if (upErr) throw upErr;
 
       const { error: insErr } = await supabase.from("quem_usa_submissoes").insert({
-        ...parsed.data,
+        nome: parsed.data.nome,
+        email: parsed.data.email,
+        banda: parsed.data.banda,
+        estilo: parsed.data.estilo,
+        modelo_caixa: parsed.data.modelo_caixa,
+        depoimento: parsed.data.depoimento,
+        link_social: parsed.data.link_social,
         foto_url: path,
         termo_aceito: true,
       });
