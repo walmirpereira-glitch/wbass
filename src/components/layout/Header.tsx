@@ -26,6 +26,7 @@ const navLinks = [
   { label: "Sobre", anchor: "/sobre", isRoute: true },
   { label: "Produtos", anchor: "/produtos", isRoute: true },
   { label: "Vídeos", anchor: "/videos", isRoute: true },
+  { label: "Quem Usa", anchor: "/quem-usa", isRoute: true },
   { label: "Garantia", anchor: "/garantia", isRoute: true },
   { label: "Dicas de Uso", anchor: "/dicas-de-uso", isRoute: true },
   { label: "Contato", anchor: "/contato", isRoute: true },
