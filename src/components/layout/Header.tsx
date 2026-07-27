@@ -87,13 +87,13 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-5 lg:gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.anchor}
                 to={link.anchor}
                 onClick={handleLinkClick}
-                className={`text-gray-700 hover:text-primary font-bold text-sm uppercase tracking-wider transition-colors ${
+                className={`text-gray-700 hover:text-primary font-bold text-xs uppercase tracking-wider whitespace-nowrap leading-none py-1 transition-colors ${
                   location.pathname === link.anchor ? "text-primary" : ""
                 }`}
               >
@@ -102,7 +102,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
             ))}
             <Link
               to="/orcamento"
-              className="btn-glow bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-2.5 rounded-lg transition-all duration-300"
+              className="btn-glow bg-primary hover:bg-primary/90 text-white font-semibold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all duration-300 whitespace-nowrap"
             >
               Cotação
             </Link>
