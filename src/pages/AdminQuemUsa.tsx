@@ -198,7 +198,7 @@ const AdminQuemUsa = () => {
           <p className="text-sm text-muted-foreground">
             Descreva o motivo ou o ajuste necessário para {correcaoTarget?.nome}.
           </p>
-          <Textarea value={motivo} onChange={(e) => setMotivo(e.target.value)} rows={5} className="text-gray-900" />
+          <Textarea value={motivo} onChange={(e) => setMotivo(e.target.value)} rows={5} className="text-white" />
           <DialogFooter>
             <Button variant="outline" onClick={() => { setCorrecaoTarget(null); setMotivo(""); }}>Cancelar</Button>
             <Button onClick={solicitarCorrecao} className="bg-primary text-white">Salvar motivo</Button>
