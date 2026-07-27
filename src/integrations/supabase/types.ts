@@ -88,7 +88,42 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      quem_usa_aprovados: {
+        Row: {
+          banda: string | null
+          created_at: string | null
+          depoimento: string | null
+          estilo: string | null
+          foto_url: string | null
+          id: string | null
+          link_social: string | null
+          modelo_caixa: string | null
+          nome: string | null
+        }
+        Insert: {
+          banda?: string | null
+          created_at?: string | null
+          depoimento?: string | null
+          estilo?: string | null
+          foto_url?: string | null
+          id?: string | null
+          link_social?: string | null
+          modelo_caixa?: string | null
+          nome?: string | null
+        }
+        Update: {
+          banda?: string | null
+          created_at?: string | null
+          depoimento?: string | null
+          estilo?: string | null
+          foto_url?: string | null
+          id?: string | null
+          link_social?: string | null
+          modelo_caixa?: string | null
+          nome?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
