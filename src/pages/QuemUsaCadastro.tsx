@@ -117,19 +117,19 @@ const QuemUsaCadastro = () => {
           <form onSubmit={handleSubmit} className="space-y-5 bg-card p-6 rounded-2xl border border-border">
             <div>
               <Label className="text-foreground">Nome completo / artístico *</Label>
-              <Input value={form.nome} onChange={handleChange("nome")} className="text-gray-900 placeholder:text-gray-400" required />
+              <Input value={form.nome} onChange={handleChange("nome")} className="text-white placeholder:text-gray-400" required />
             </div>
             <div>
               <Label className="text-foreground">E-mail de contato *</Label>
-              <Input type="email" value={form.email} onChange={handleChange("email")} className="text-gray-900 placeholder:text-gray-400" required />
+              <Input type="email" value={form.email} onChange={handleChange("email")} className="text-white placeholder:text-gray-400" required />
             </div>
             <div>
               <Label className="text-foreground">Banda / Projeto *</Label>
-              <Input value={form.banda} onChange={handleChange("banda")} className="text-gray-900 placeholder:text-gray-400" required />
+              <Input value={form.banda} onChange={handleChange("banda")} className="text-white placeholder:text-gray-400" required />
             </div>
             <div>
               <Label className="text-foreground">Estilo musical *</Label>
-              <Input value={form.estilo} onChange={handleChange("estilo")} placeholder="Ex: Rock, Gospel, Jazz..." className="text-gray-900 placeholder:text-gray-400" required />
+              <Input value={form.estilo} onChange={handleChange("estilo")} placeholder="Ex: Rock, Gospel, Jazz..." className="text-white placeholder:text-gray-400" required />
             </div>
             <div>
               <Label className="text-foreground">Modelo da caixa Wbass *</Label>
@@ -147,7 +147,7 @@ const QuemUsaCadastro = () => {
             </div>
             <div>
               <Label className="text-foreground">Depoimento sobre o timbre *</Label>
-              <Textarea value={form.depoimento} onChange={handleChange("depoimento")} rows={5} className="text-gray-900 placeholder:text-gray-400" required />
+              <Textarea value={form.depoimento} onChange={handleChange("depoimento")} rows={5} className="text-white placeholder:text-gray-400" required />
             </div>
             <div>
               <Label className="text-foreground">Foto sua com o equipamento *</Label>
@@ -162,7 +162,7 @@ const QuemUsaCadastro = () => {
             </div>
             <div>
               <Label className="text-foreground">Link de rede social *</Label>
-              <Input type="url" value={form.link_social} onChange={handleChange("link_social")} placeholder="https://instagram.com/seuperfil" className="text-gray-900 placeholder:text-gray-400" required />
+              <Input type="url" value={form.link_social} onChange={handleChange("link_social")} placeholder="https://instagram.com/seuperfil" className="text-white placeholder:text-gray-400" required />
             </div>
 
             <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/40 border border-border">
