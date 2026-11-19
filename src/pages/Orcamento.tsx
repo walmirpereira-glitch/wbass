@@ -8,120 +8,8 @@ import { Send, Plus, Minus, Crown, Zap, FileText, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAutoNavigate } from "@/hooks/useAutoNavigate";
 
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaqjpzaa";
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  specs: string;
-  line: "premium" | "easy";
-}
-
-const products: Product[] = [
-  // Linha Premium
-  {
-    id: "210d",
-    name: "Wbass 210D",
-    description: "2 falantes Italianos em neodímio de 10\" + driver",
-    price: 5602.08,
-    specs: "400W RMS | 8 ohms",
-    line: "premium",
-  },
-  {
-    id: "210dp",
-    name: "Wbass 210DP",
-    description: "2 falantes Italianos em neodímio de 10\" + driver",
-    price: 5781.60,
-    specs: "500W RMS | 4 ohms",
-    line: "premium",
-  },
-  {
-    id: "212d",
-    name: "Wbass 212D",
-    description: "2 falantes Italianos em neodímio de 12\" + driver",
-    price: 6429.72,
-    specs: "700W RMS | 4 ohms",
-    line: "premium",
-  },
-  {
-    id: "410dp",
-    name: "Wbass 410DP",
-    description: "4 falantes Italianos em neodímio de 10\" + driver",
-    price: 7102.22,
-    specs: "800W RMS | 4 ohms",
-    line: "premium",
-  },
-  {
-    id: "112d",
-    name: "Wbass 112D",
-    description: "1 falante Italiano em neodímio de 12\" + driver",
-    price: 5516.28,
-    specs: "350W RMS | 4 ou 8 ohms",
-    line: "premium",
-  },
-  {
-    id: "112nd",
-    name: "Wbass 112ND",
-    description: "1 falante Italiano em neodímio de 12\", sem driver",
-    price: 4329.60,
-    specs: "350W RMS | 4 ou 8 ohms",
-    line: "premium",
-  },
-  {
-    id: "115d",
-    name: "Wbass 115D",
-    description: "1 falante Italiano em neodímio de 15\" + driver",
-    price: 5760.48,
-    specs: "400W RMS | 8 ohms",
-    line: "premium",
-  },
-  {
-    id: "115nd",
-    name: "Wbass 115ND",
-    description: "1 falante Italiano em neodímio de 15\", sem driver",
-    price: 4590.96,
-    specs: "400W RMS | 8 ohms",
-    line: "premium",
-  },
-  // Linha Easy
-  {
-    id: "easy-1x10d",
-    name: "Wbass Easy 1x10D",
-    description: "1 falante 10\" em ferrite nacional + driver",
-    price: 2599.00,
-    specs: "300W RMS | 4 ou 8 ohms",
-    line: "easy",
-  },
-  {
-    id: "easy-2x10d",
-    name: "Wbass Easy 2x10D",
-    description: "2 falantes 10\" em ferrite nacional + driver",
-    price: 3499.96,
-    specs: "500W RMS | 4 ou 8 ohms",
-    line: "easy",
-  },
-  {
-    id: "easy-1x12d",
-    name: "Wbass Easy 1x12D",
-    description: "1 falante 12\" em ferrite nacional + driver",
-    price: 2992.00,
-    specs: "400W RMS | 4 ou 8 ohms",
-    line: "easy",
-  },
-  {
-    id: "easy-1x12nd",
-    name: "Wbass Easy 1x12ND",
-    description: "1 falante 12\" em ferrite nacional, sem driver",
-    price: 2502.08,
-    specs: "400W RMS | 4 ou 8 ohms",
-    line: "easy",
-  },
-];
-
-const premiumProducts = products.filter((p) => p.line === "premium");
-const easyProducts = products.filter((p) => p.line === "easy");
+import { premiumProducts, easyProducts, type Product } from "@/data/products";
+import { submitFormspree } from "@/lib/formspree";
 
 interface CartItem {
   product: Product;
@@ -147,6 +35,7 @@ const Orcamento = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
     
     if (cart.length === 0) {
       toast({
@@ -206,18 +95,7 @@ const Orcamento = () => {
         _subject: `Nova Proposta - ${nome}`,
       };
 
-      const response = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao enviar");
-      }
+      await submitFormspree(payload);
 
       toast({
         title: "Proposta enviada com sucesso!",
@@ -382,7 +260,7 @@ const Orcamento = () => {
             </div>
 
             {/* Formulário com AJAX */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
               {/* Client Form */}
               <div className="bg-secondary/30 p-8 rounded-lg border border-border mb-8">
                 <h2 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">

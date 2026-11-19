@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import contactShowcase from "@/assets/contact-showcase.jpg";
 
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaqjpzaa";
+import { submitFormspree } from "@/lib/formspree";
 
 const contactInfo = [
   {
@@ -50,6 +50,7 @@ export function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     // Client-side validation
     const name = formData.name.trim();
@@ -77,24 +78,13 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          message,
-          _subject: `Novo Contato - ${name}`,
-        }),
+      await submitFormspree({
+        name,
+        email,
+        phone,
+        message,
+        _subject: `Novo Contato - ${name}`,
       });
-
-      if (!response.ok) {
-        throw new Error("Erro ao enviar");
-      }
 
       toast({
         title: "Mensagem enviada com sucesso!",
@@ -211,6 +201,7 @@ export function ContactSection() {
           >
             <form 
               onSubmit={handleSubmit}
+              aria-busy={isSubmitting}
               className="space-y-6 bg-gray-50 p-10 rounded-2xl border border-gray-200 shadow-lg"
             >
               <div>

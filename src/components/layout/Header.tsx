@@ -39,8 +39,13 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'instant' });
+
   };
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -144,7 +149,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_, ref) {
               ))}
               <Link
                 to="/orcamento"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={handleLinkClick}
                 className="btn-glow mx-6 mt-3 bg-primary hover:bg-primary/90 text-white font-semibold text-sm uppercase tracking-wider px-6 py-3 rounded-lg text-center transition-all duration-300"
               >
                 Cotação
